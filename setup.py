@@ -6,12 +6,11 @@ from publicauth import VERSION, PROJECT
 
 
 MODULE_NAME = 'publicauth'
-BASE_DIR = os.path.abspath(os.path.join( os.path.dirname( __file__ ), MODULE_NAME, 'templates'))
 PACKAGE_DATA = list()
 
-for root, dirs, files in os.walk( BASE_DIR ):
+for root, dirs, files in os.walk( os.path.join( MODULE_NAME, 'templates' )):
     for filename in files:
-        PACKAGE_DATA.append("%s/%s" % ( root[len(MODULE_NAME):], filename ))
+        PACKAGE_DATA.append("%s/%s" % ( root[len(MODULE_NAME)+1:], filename ))
 
 
 setup(
