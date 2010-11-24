@@ -5,10 +5,12 @@ from setuptools import setup, find_packages
 from publicauth import VERSION, PROJECT
 
 
-package_data = list()
-for root, dirs, files in os.walk( 'sitegen/templates' ):
+BASE_DIR = os.path.abspath(os.path.join( os.path.dirname( __file__ ), 'publicauth', 'templates'))
+PACKAGE_DATA = list()
+
+for root, dirs, files in os.walk( BASE_DIR ):
     for filename in files:
-        package_data.append("%s/%s" % ( root[8:], filename ))
+        PACKAGE_DATA.append("%s/%s" % ( root[8:], filename ))
 
 
 setup(
@@ -27,7 +29,7 @@ setup(
     url = "http://github.com/klen/django-publicauth.git",
 
     packages = find_packages(),
-    package_data = { '': package_data, },
+    package_data = { '': PACKAGE_DATA, },
 
     install_requires = [ 'python-openid' ],
 )
