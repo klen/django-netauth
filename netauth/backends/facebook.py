@@ -18,18 +18,15 @@ class FacebookBackend(OAuthBaseBackend):
 
     def validate(self, request, data):
 
-        from netauth import log
-        log.info( 'start validate' )
         if not data.get('code'):
             self.error(request)
 
-        log.info( 'create request' )
         request = self.get_request( url=self.ACCESS_TOKEN_URL, parameters = {
             'client_id' : self.APPLICATION_ID,
+            'redirect_uri' : self.callback(request),
             'client_secret': self.APPLICATION_SECRET,
-            'code': data['code']
+            'code': data['code'],
         })
-
         content = self.load_request(request)
         self.identity = self.parse_qs(content)['access_token'][0]
         return content
