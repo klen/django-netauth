@@ -1,9 +1,9 @@
 from __future__ import absolute_import
 
-import urllib
+import httplib2
 import urlparse
 
-from oauth import Consumer, Token, Request, SignatureMethod_HMAC_SHA1
+from oauth2 import Consumer, Token, Request, SignatureMethod_HMAC_SHA1
 
 from django.conf import settings as global_settings
 from django.utils.datastructures import MultiValueDictKeyError
@@ -16,49 +16,59 @@ from publicauth.backends import BaseBackend
 from publicauth import lang
 
 
+class OAuthError( Exception ):
+    pass
+
+
 class OAuthBackend(BaseBackend):
 
     CONSUMER_KEY = property(lambda self: getattr(global_settings, "%s_CONSUMER_KEY" % self.provider.upper()))
     CONSUMER_SECRET = property(lambda self: getattr(global_settings, "%s_CONSUMER_SECRET" % self.provider.upper()))
     REQUEST_TOKEN_URL = property(lambda self: getattr(global_settings, "%s_REQUEST_TOKEN_URL" % self.provider.upper()))
+
     ACCESS_TOKEN_URL = property(lambda self: getattr(global_settings, "%s_ACCESS_TOKEN_URL" % self.provider.upper()))
     AUTHORIZE_URL = property(lambda self: getattr(global_settings, "%s_AUTHORIZE_URL" % self.provider.upper()))
     API_URL = property(lambda self: getattr(global_settings, "%s_API_URL" % self.provider.upper()))
+
+    def __init__( self, *args, **kwargs ):
+        self.consumer = Consumer(self.CONSUMER_KEY, self.CONSUMER_SECRET)
+        self.signature_method = SignatureMethod_HMAC_SHA1()
+        super( OAuthBackend, self ).__init__( *args, **kwargs )
 
     def begin(self, request, data):
         """ Try to get Request Token from OAuth Provider and
             redirect user to provider's site for approval.
         """
-        consumer = Consumer(self.CONSUMER_KEY, self.CONSUMER_SECRET)
-        signature_method = SignatureMethod_HMAC_SHA1()
         callback = request.build_absolute_uri(reverse('publicauth-complete', args=[self.provider]))
-        oauth_req = Request.from_consumer_and_token(consumer, callback=callback, http_url=self.REQUEST_TOKEN_URL)
-        oauth_req.sign_request(signature_method, consumer, None)
-        response = urllib.urlopen(oauth_req.to_url()).read()
+        url = self.__get_url(
+                http_url=self.REQUEST_TOKEN_URL,
+                parameters={ 'oauth_callback' : callback })
 
-        token = Token.from_string(response) # instatiate token
+        response, content = httplib2.Http().request(url)
 
-        oauth_req = Request.from_consumer_and_token(consumer, token, http_url=self.AUTHORIZE_URL)
-        oauth_req.sign_request(signature_method, consumer, token)
-        raise Redirect(oauth_req.to_url())
+        if response[ 'status' ] != 200:
+            raise OAuthError( "No access to private resources.")
+
+        url = self.__get_url( token = Token.from_string( content ), http_url=self.AUTHORIZE_URL,)
+        raise Redirect(url)
 
     def validate(self, request, data):
-        signature_method = SignatureMethod_HMAC_SHA1()
-        consumer = Consumer(self.CONSUMER_KEY, self.CONSUMER_SECRET)
         try:
-            oauth_token = data['oauth_token']
-            oauth_verifier = data.get('oauth_verifier', None)
+            parameters = dict(
+                    oauth_token = data['oauth_token'],
+                    oauth_verifier = data.get('oauth_verifier', None))
         except MultiValueDictKeyError:
             messages.error(request, lang.BACKEND_ERROR)
             raise Redirect('publicauth-login')
-        oauth_req = Request.from_consumer_and_token(consumer, http_url=self.ACCESS_TOKEN_URL)
-        oauth_req.set_parameter('oauth_token', oauth_token)
-        if oauth_verifier:
-            oauth_req.set_parameter('oauth_verifier', oauth_verifier)
-        oauth_req.sign_request(signature_method, consumer, None)
-        response = urllib.urlopen(oauth_req.to_url()).read()
-        self.identity = urlparse.parse_qs(response, keep_blank_values=False)['oauth_token'][0]
-        return response
+
+        url = self.__get_url( http_url=self.ACCESS_TOKEN_URL, parameters=parameters)
+        response, content = httplib2.Http().request(url)
+
+        if response[ 'status' ] != 200:
+            raise OAuthError( "No access to private resources.")
+
+        self.identity = urlparse.parse_qs(content, keep_blank_values=False)['oauth_token'][0]
+        return content
 
     def complete(self, request, response):
         data = self.fill_extra_fields(request, self.get_extra_data(response))
@@ -69,7 +79,20 @@ class OAuthBackend(BaseBackend):
     def get_extra_data(self, response):
         user_id = urlparse.parse_qs(response, keep_blank_values=False)['user_id'][0]
         url = self.API_URL % user_id
-        return simplejson.loads(urllib.urlopen(url).read())
+        response, content = httplib2.Http().request(url)
+        result = dict()
+        if response[ 'status' ] == 200:
+            result = simplejson.loads(content)
+        return result
 
     def extract_data(self, extra, backend_field, form_field):
         return {form_field: extra.get(backend_field, '')}
+
+    def __get_url( self, token=None, http_url=None, parameters=dict() ):
+        request = Request.from_consumer_and_token( self.consumer,
+                    token = token,
+                    http_url=http_url,
+                    parameters=parameters)
+        request.sign_request(self.signature_method, self.consumer, token)
+        return request.to_url()
+
