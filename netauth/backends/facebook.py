@@ -12,7 +12,7 @@ class FacebookBackend(OAuthBaseBackend):
     def begin( self, request, data ):
         request = self.get_request( url=self.AUTHORIZE_URL, parameters = {
             'client_id' : self.APPLICATION_ID,
-            'redirect_uri' : self.callback,
+            'redirect_uri' : self.callback(request),
         })
         raise Redirect(request.to_url())
 

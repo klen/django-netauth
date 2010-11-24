@@ -126,7 +126,6 @@ class OAuthBaseBackend( BaseBackend ):
         self.client = Http()
         super( OAuthBaseBackend, self ).__init__( *args, **kwargs )
 
-    @property
     def callback( self, request ):
         return request.build_absolute_uri(reverse('netauth-complete', args=[self.provider]))
 

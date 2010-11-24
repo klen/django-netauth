@@ -22,7 +22,8 @@ class OAuthBackend(OAuthBaseBackend):
         """ Try to get Request Token from OAuth Provider and
             redirect user to provider's site for approval.
         """
-        request = self.get_request( http_url=self.REQUEST_TOKEN_URL, parameters = {'oauth_callback':self.callback})
+        request = self.get_request( http_url=self.REQUEST_TOKEN_URL,
+                parameters = {'oauth_callback':self.callback( request )})
         content = self.load_request(request)
         request = self.get_request( token = Token.from_string(content), http_url=self.AUTHORIZE_URL,)
         raise Redirect(request.to_url())
