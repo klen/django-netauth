@@ -31,6 +31,7 @@ class BaseBackend(object):
     def complete(self, request, response):
         """ Complete net auth.
         """
+        log.info(self.get_extra_data(response))
         data = self.fill_extra_fields(request, self.get_extra_data(response))
         request.session['extra'] = data
         request.session['identity'] = self.identity
