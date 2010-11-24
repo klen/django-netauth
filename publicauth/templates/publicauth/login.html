@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="{% url publicauth-begin 'openid' %}?next={{ request.GET.next }}" method="post" id="openid_login">
+    Openid URL
+    <input type="text" name="openid_url" />
+    <p><input type="submit" value="Continue"/></p>
+</form>
+
+<a href="{% url publicauth-begin 'google' %}?openid_url=https://www.google.com/accounts/o8/id&next={{ request.GET.next }}">Google</a>
+<a href="{% url publicauth-begin 'twitter' %}?next={{ request.GET.next }}">Twitter</a>
+<a href="{% url publicauth-begin 'friendfeed' %}?next={{ request.GET.next }}">FriendFeed</a>
+
+
+<a href="#" onclick="return fb_login();" id="facebook">Login with facebook</a>
+
+<script type="text/javascript" src="http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php"></script>
+<script type="text/javascript">
+    FB.init("{{ request.facebook.api_key }}", "{% url publicauth-facebook-xdreceiver %}");
+
+    function fb_login() {
+        FB.Connect.requireSession(function(test) {
+            window.location = "{% url publicauth-complete 'facebook' %}?next={{ request.GET.next }}";
+        });
+        return false;
+    }
+</script>
+
+{% endblock %}
+
+
