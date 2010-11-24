@@ -26,7 +26,9 @@ class VkontakteBackend(OAuthBaseBackend):
                 raise ValueError()
         except (KeyError, IndexError, AttributeError, ValueError):
             log.info(value)
+            log.info(value + settings.VKONTAKTE_APPLICATION_SECRET)
             log.info(cookie_data['sig'][0])
+            log.info(md5(value + settings.VKONTAKTE_APPLICATION_SECRET))
             log.info(md5(value + settings.VKONTAKTE_APPLICATION_SECRET).hexdigest())
             self.error(request)
         return data
