@@ -68,7 +68,6 @@ class OAuthBackend(BaseBackend):
             raise OAuthError( "No access to private resources.")
 
         twitter_data = urlparse.parse_qs(content, keep_blank_values=False)
-        log.info( twitter_data )
         self.identity = twitter_data['oauth_token'][0]
         return content
 
@@ -83,7 +82,7 @@ class OAuthBackend(BaseBackend):
         url = self.API_URL % user_id
         response, content = httplib2.Http().request(url)
         result = dict()
-        if response[ 'status' ] == 200:
+        if response[ 'status' ] == '200':
             result = simplejson.loads(content)
         return result
 
