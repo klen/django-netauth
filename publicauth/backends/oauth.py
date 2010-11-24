@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import urllib
 import urlparse
 
-from oauth.oauth import OAuthConsumer, OAuthToken, OAuthRequest, OAuthSignatureMethod_HMAC_SHA1
+from oauth import Consumer, Token, Request, SignatureMethod_HMAC_SHA1
 
 from django.conf import settings as global_settings
 from django.utils.datastructures import MultiValueDictKeyError
@@ -26,33 +26,32 @@ class OAuthBackend(BaseBackend):
     API_URL = property(lambda self: getattr(global_settings, "%s_API_URL" % self.provider.upper()))
 
     def begin(self, request, data):
+        """ Try to get Request Token from OAuth Provider and
+            redirect user to provider's site for approval.
         """
-        Try to get Request Token from OAuth Provider and
-        redirect user to provider's site for approval.
-        """
-        consumer = OAuthConsumer(self.CONSUMER_KEY, self.CONSUMER_SECRET)
-        signature_method = OAuthSignatureMethod_HMAC_SHA1()
+        consumer = Consumer(self.CONSUMER_KEY, self.CONSUMER_SECRET)
+        signature_method = SignatureMethod_HMAC_SHA1()
         callback = request.build_absolute_uri(reverse('publicauth-complete', args=[self.provider]))
-        oauth_req = OAuthRequest.from_consumer_and_token(consumer, callback=callback, http_url=self.REQUEST_TOKEN_URL)
+        oauth_req = Request.from_consumer_and_token(consumer, callback=callback, http_url=self.REQUEST_TOKEN_URL)
         oauth_req.sign_request(signature_method, consumer, None)
         response = urllib.urlopen(oauth_req.to_url()).read()
 
-        token = OAuthToken.from_string(response) # instatiate token
+        token = Token.from_string(response) # instatiate token
 
-        oauth_req = OAuthRequest.from_consumer_and_token(consumer, token, http_url=self.AUTHORIZE_URL)
+        oauth_req = Request.from_consumer_and_token(consumer, token, http_url=self.AUTHORIZE_URL)
         oauth_req.sign_request(signature_method, consumer, token)
         raise Redirect(oauth_req.to_url())
 
     def validate(self, request, data):
-        signature_method = OAuthSignatureMethod_HMAC_SHA1()
-        consumer = OAuthConsumer(self.CONSUMER_KEY, self.CONSUMER_SECRET)
+        signature_method = SignatureMethod_HMAC_SHA1()
+        consumer = Consumer(self.CONSUMER_KEY, self.CONSUMER_SECRET)
         try:
             oauth_token = data['oauth_token']
             oauth_verifier = data.get('oauth_verifier', None)
         except MultiValueDictKeyError:
             messages.error(request, lang.BACKEND_ERROR)
             raise Redirect('publicauth-login')
-        oauth_req = OAuthRequest.from_consumer_and_token(consumer, http_url=self.ACCESS_TOKEN_URL)
+        oauth_req = Request.from_consumer_and_token(consumer, http_url=self.ACCESS_TOKEN_URL)
         oauth_req.set_parameter('oauth_token', oauth_token)
         if oauth_verifier:
             oauth_req.set_parameter('oauth_verifier', oauth_verifier)
@@ -74,4 +73,3 @@ class OAuthBackend(BaseBackend):
 
     def extract_data(self, extra, backend_field, form_field):
         return {form_field: extra.get(backend_field, '')}
-
