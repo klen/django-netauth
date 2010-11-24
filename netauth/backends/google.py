@@ -2,8 +2,8 @@ from __future__ import absolute_import
 
 from openid.extensions.ax import FetchResponse
 
-from publicauth.backends.openid import OpenIDBackend
-from publicauth import settings
+from netauth.backends.openid import OpenIDBackend
+from netauth import settings
 
 
 class GoogleBackend(OpenIDBackend):
@@ -13,4 +13,3 @@ class GoogleBackend(OpenIDBackend):
 
     def extract_data(self, extra, backend_field, form_field):
         return {form_field: extra.getSingle(settings.AX_URIS[backend_field], '')}
-

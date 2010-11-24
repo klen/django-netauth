@@ -1,10 +1,15 @@
+import urlparse
+
 from django.conf import settings as global_settings
 from django.contrib import messages, auth
+from django.core.urlresolvers import reverse
+from httplib2 import Http
+from oauth2 import Request
 
-from publicauth.exceptions import Redirect
-from publicauth import settings, lang
-from publicauth.models import PublicID
-from publicauth.utils import str_to_class
+from netauth import log, settings, lang
+from netauth.exceptions import Redirect
+from netauth.models import NetID
+from netauth.utils import str_to_class
 
 
 class BaseBackend(object):
@@ -18,18 +23,23 @@ class BaseBackend(object):
     def begin(self, request, data):
         raise NotImplementedError
 
-    def complete(self, request, response):
-        raise NotImplementedError
-
     def validate(self, request, data):
         raise NotImplementedError
 
     def get_extra_data(self, response):
         raise NotImplementedError
 
+    def complete(self, request, response):
+        """ Complete net auth.
+        """
+        data = self.fill_extra_fields(request, self.get_extra_data(response))
+        request.session['extra'] = data
+        request.session['identity'] = self.identity
+        raise Redirect('netauth-extra', self.provider)
+
     def merge_accounts(self, request):
         """
-        Attach PublicID account to regular django
+        Attach NetID account to regular django
         account and then redirect user. In this situation
         user dont have to fill extra fields because he filled
         them when first account (request.user) was created.
@@ -37,27 +47,27 @@ class BaseBackend(object):
         Note that self.indentity must be already set in this stage by
         validate_response function.
         """
-        # create new public ID record in database
+        # create new net ID record in database
         # and attach it to request.user account.
-        publicid = PublicID()
-        publicid.user = request.user
-        publicid.identity = self.identity
-        publicid.provider = self.provider
-        publicid.save()
+        netid = NetID()
+        netid.user = request.user
+        netid.identity = self.identity
+        netid.provider = self.provider
+        netid.save()
 
         # show nice message to user.
         messages.add_message(request, messages.SUCCESS, lang.ACCOUNTS_MERGED)
         # redirect user.
-        raise Redirect(global_settings.LOGIN_REDIRECT_URL)
+        raise Redirect(settings.LOGIN_REDIRECT_URL)
 
     def login_user(self, request):
         """
-        Try to login user by public identity.
+        Try to login user by net identity.
         Do nothing in case of failure.
         """
         # only actavted users can login if activation required.
         user = auth.authenticate(identity=self.identity, provider=self.provider)
-        if user and settings.PUBLICAUTH_ACTIVATION_REQUIRED and not user.is_active:
+        if user and settings.ACTIVATION_REQUIRED and not user.is_active:
             messages.add_message(request, messages.ERROR, lang.NOT_ACTIVATED)
             raise Redirect(settings.ACTIVATION_REDIRECT_URL)
 
@@ -70,7 +80,7 @@ class BaseBackend(object):
                 redirect_url = request.session['next_url']
                 del request.session['next_url']
             except KeyError:
-                redirect_url = global_settings.LOGIN_REDIRECT_URL
+                redirect_url = settings.LOGIN_REDIRECT_URL
             raise Redirect(redirect_url)
 
     def fill_extra_fields(self, request, extra):
@@ -107,3 +117,35 @@ class BaseBackend(object):
         return {form_field: extra.get(backend_field, '')}
 
 
+class OAuthBaseBackend( BaseBackend ):
+
+    AUTHORIZE_URL = property(lambda self: getattr(settings, "%s_AUTHORIZE_URL" % self.provider.upper()))
+    ACCESS_TOKEN_URL = property(lambda self: getattr(settings, "%s_ACCESS_TOKEN_URL" % self.provider.upper()))
+    API_URL = property(lambda self: getattr(settings, "%s_API_URL" % self.provider.upper()))
+
+    def __init__( self, *args, **kwargs ):
+        self.client = Http()
+        super( OAuthBaseBackend, self ).__init__( *args, **kwargs )
+
+    @property
+    def callback( self, request ):
+        return request.build_absolute_uri(reverse('netauth-complete', args=[self.provider]))
+
+    def load_request( self, request ):
+        response, content = self.client.request(request.to_url())
+        if response[ 'status' ] != '200':
+            log.info(content)
+            self.error()
+
+        return content
+
+    def get_request(self, url=None, parameters=None):
+        return Request(url=url, parameters=parameters)
+
+    def error(self, request):
+        messages.error(request, getattr( lang, '%s_INVALID_RESPONSE' % self.provider.upper()))
+        raise Redirect('netauth-login')
+
+    @staticmethod
+    def parse_qs( content ):
+        return urlparse.parse_qs( content, keep_blank_values=False )

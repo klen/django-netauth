@@ -2,10 +2,10 @@ import os
 
 from setuptools import setup, find_packages
 
-from publicauth import VERSION, PROJECT
+from netauth import VERSION, PROJECT
 
 
-MODULE_NAME = 'publicauth'
+MODULE_NAME = 'netauth'
 PACKAGE_DATA = list()
 
 for root, dirs, files in os.walk( os.path.join( MODULE_NAME, 'templates' )):
@@ -19,14 +19,14 @@ META_DATA = dict(
     description = "django authentication application.",
     long_description = """
         **Download:**
-            - git clone http://github.com/klen/django-publicauth.git
+            - git clone http://github.com/klen/django-netauth.git
     """,
     license = "BSD",
 
     author = "Kirill Klenov",
     author_email = "horneds@gmail.com",
 
-    url = "http://github.com/klen/django-publicauth.git",
+    url = "http://github.com/klen/django-netauth.git",
 
     packages = find_packages(),
     package_data = { '': PACKAGE_DATA, },

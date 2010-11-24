@@ -1,17 +1,16 @@
-from django.conf import settings as global_settings
 from django.contrib import messages, auth
 from django.http import Http404
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
-from publicauth import settings, lang
-from publicauth.utils import str_to_class, get_backend
+from netauth import settings, lang
+from netauth.utils import str_to_class, get_backend
 
 
 def logout(request):
     auth.logout(request)
     messages.success(request, lang.SUCCESS_LOGOUT)
-    return redirect(global_settings.LOGOUT_URL)
+    return redirect(settings.LOGOUT_URL)
 
 
 def begin(request, provider):
@@ -25,8 +24,7 @@ def begin(request, provider):
 
     # store url to where user will be redirected
     # after successfull authentication.
-    request.session['next_url'] = request.GET.get("next") or \
-                                    global_settings.LOGIN_REDIRECT_URL
+    request.session['next_url'] = request.GET.get("next") or settings.LOGIN_REDIRECT_URL
 
     # start the authentication process
     backend = get_backend(provider)
@@ -34,16 +32,16 @@ def begin(request, provider):
 
 
 def complete(request, provider):
-    """ After first step of public authentication, we must validate the response.
+    """ After first step of net authentication, we must validate the response.
         If everything is ok, we must do the following:
         1. If user is already authenticated:
             a. Try to login him again (strange variation but we must take it to account).
-            b. Create new PublicID record in database.
-            c. Merge authenticated account with newly created PublicID record.
+            b. Create new netID record in database.
+            c. Merge authenticated account with newly created netID record.
             d. Redirect user to 'next' url stored in session.
         2. If user is anonymouse:
             a. Try to log him by identity and redirect to 'next' url.
-            b. Create new  PublicID record in database.
+            b. Create new  netID record in database.
             c. Try to automaticaly fill all extra fields with information returned form
             server. If successfull, login the user and redirect to 'next' url.
             d. Redirect user to extra page where he can fill all extra fields by hand.
@@ -80,7 +78,7 @@ def extra(request, provider):
         if form.is_valid():
             user = form.save(request, identity, provider)
             del request.session['identity']
-            if not settings.PUBLICAUTH_ACTIVATION_REQUIRED:
+            if not settings.ACTIVATION_REQUIRED:
                 user = auth.authenticate(identity=identity, provider=provider)
                 if user:
                     auth.login(request, user)
@@ -94,5 +92,5 @@ def extra(request, provider):
         initial = request.session['extra']
         form = str_to_class(settings.EXTRA_FORM)(initial=initial)
 
-    return render_to_response('publicauth/extra.html', {'form': form }, context_instance=RequestContext(request))
+    return render_to_response('netauth/extra.html', {'form': form }, context_instance=RequestContext(request))
 

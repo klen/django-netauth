@@ -3,13 +3,13 @@ from django.conf import settings
 
 ### REGISTRATION_ALLOWED ###########################################################################
 # To disable registration, set it to False                                                         #
-REGISTRATION_ALLOWED = getattr(settings, "REGISTRATION_ALLOWED", True)                             #
+REGISTRATION_ALLOWED = getattr(settings, "NETAUTH_REGISTRATION_ALLOWED", True)                             #
 ####################################################################################################
 
 ### AX_URIS ########################################################################################
 # This dict contains mapping of SREG fields to AX uris, you probably don't need to change it       #
 # http://www.axschema.org/types/                                                                   #
-AX_URIS = getattr(settings, "AX_URIS", {                                                           #
+AX_URIS = getattr(settings, "NETAUTH_AX_URIS", {                                                           #
     'nickname': 'http://axschema.org/namePerson/friendly',                                         #
     'email': 'http://axschema.org/contact/email',                                                  #
     'fullname': 'http://axschema.org/namePerson',                                                  #
@@ -23,21 +23,26 @@ AX_URIS = getattr(settings, "AX_URIS", {                                        
 ####################################################################################################
 
 ### BACKEND_MAPPING ################################################################################
-PUBLICAUTH_BACKEND_MAPPING = getattr(settings, "PUBLICAUTH_BACKEND_MAPPING", {                     #
-    'openid': 'publicauth.backends.openid.OpenIDBackend',                                          #
-    'google': 'publicauth.backends.google.GoogleBackend',                                          #
-    'twitter': 'publicauth.backends.oauth.OAuthBackend',                                           #
-    'facebook': 'publicauth.backends.facebook.FacebookBackend',                                    #
-    'friendfeed': 'publicauth.backends.oauth.OAuthBackend',                                        #
-    'vkontakte': 'publicauth.backends.vkontakte.VkontakteBackend',                                 #
+BACKEND_MAPPING = getattr(settings, "NETAUTH_BACKEND_MAPPING", {                     #
+    'openid': 'netauth.backends.openid.OpenIDBackend',                                          #
+    'google': 'netauth.backends.google.GoogleBackend',                                          #
+    'twitter': 'netauth.backends.oauth.OAuthBackend',                                           #
+    'facebook': 'netauth.backends.facebook.FacebookBackend',                                    #
+    'friendfeed': 'netauth.backends.oauth.OAuthBackend',                                        #
+    'vkontakte': 'netauth.backends.vkontakte.VkontakteBackend',                                 #
     }                                                                                              #
 )                                                                                                  #
 ####################################################################################################
 
-REGISTRATION_DISABLED_REDIRECT = getattr(settings, "REGISTRATION_DISABLED_REDIRECT", "/")
+REGISTRATION_DISABLED_REDIRECT = getattr(settings, "NETAUTH_REGISTRATION_DISABLED_REDIRECT", "/")
 
-PUBLICAUTH_ACTIVATION_REQUIRED = getattr(settings, "PUBLICAUTH_ACTIVATION_REQUIRED", False)
+ACTIVATION_REQUIRED = getattr(settings, "NETAUTH_ACTIVATION_REQUIRED", False)
 
-ACTIVATION_REDIRECT_URL = getattr(settings, "PUBLICAUTH_ACTIVATION_REDIRECT_URL", "/")
+ACTIVATION_REDIRECT_URL = getattr(settings, "NETAUTH_ACTIVATION_REDIRECT_URL", "/")
 
-EXTRA_FORM = getattr(settings, "PUBLICAUTH_EXTRA_FORM", "publicauth.forms.ExtraForm")
+EXTRA_FORM = getattr(settings, "NETAUTH_EXTRA_FORM", "netauth.forms.ExtraForm")
+
+DEFAULT_FROM_EMAIL = getattr(settings, "DEFAULT_FROM_EMAIL")
+
+LOGIN_REDIRECT_URL = getattr(settings, "LOGIN_REDIRECT_URL")
+LOGOUT_URL = getattr(settings, "LOGOUT_URL")

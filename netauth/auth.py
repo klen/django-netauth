@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
-from publicauth.models import PublicID
+from netauth.models import NetID
 
 
-class PublicBackend(object):
+class NetBackend(object):
     """ Add this Authentication Backend to
         AUTHENTICATION_BACKENDS tuple in your settings.py
     """
@@ -20,9 +20,9 @@ class PublicBackend(object):
         """
         if identity:
             try:
-                user = PublicID.objects.get(identity=identity, provider=provider).user
+                user = NetID.objects.get(identity=identity, provider=provider).user
                 return user
-            except PublicID.DoesNotExist:
+            except NetID.DoesNotExist:
                 return None
         else:
             return None

@@ -1,4 +1,4 @@
-MODULE=django-publicauth
+MODULE=django-netauth
 
 clean:
 	sudo rm -rf build dist $(MODULE).egg-info

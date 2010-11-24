@@ -1,13 +1,12 @@
 import re
 
-from django.conf import global_settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import send_mail
 from django.template import Context
 from django.template.loader import get_template
 from django.utils.importlib import import_module
 
-from publicauth import settings
+from netauth import settings
 
 
 def parse_template(template_path, **kwargs):
@@ -29,7 +28,7 @@ def email_template(rcpt, template_path, **kwargs):
     """
 
     subject, content = parse_template(template_path, **kwargs)
-    count = send_mail(subject, content, global_settings.DEFAULT_FROM_EMAIL,
+    count = send_mail(subject, content, settings.DEFAULT_FROM_EMAIL,
                       [rcpt], fail_silently=True)
     return bool(count)
 
@@ -68,5 +67,5 @@ def get_instance_from_path(path, *args, **kwargs):
     return backend_class(*args, **kwargs)
 
 def get_backend(name):
-    return get_instance_from_path(settings.PUBLICAUTH_BACKEND_MAPPING[name], name)
+    return get_instance_from_path(settings.BACKEND_MAPPING[name], name)
 

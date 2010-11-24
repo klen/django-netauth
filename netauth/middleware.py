@@ -1,5 +1,5 @@
 from django.shortcuts import redirect
-from .exceptions import Redirect
+from netauth.exceptions import Redirect
 
 class RedirectMiddleware(object):
     """ You must add this middleware to MIDDLEWARE_CLASSES list,
