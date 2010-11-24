@@ -13,7 +13,7 @@ for root, dirs, files in os.walk( os.path.join( MODULE_NAME, 'templates' )):
         PACKAGE_DATA.append("%s/%s" % ( root[len(MODULE_NAME)+1:], filename ))
 
 
-setup(
+META_DATA = dict(
     name = PROJECT,
     version = VERSION,
     description = "django authentication application.",
@@ -31,6 +31,10 @@ setup(
     packages = find_packages(),
     package_data = { '': PACKAGE_DATA, },
 
-    install_requires = [ 'python-openid' ],
+    install_requires = [ 'python-openid', 'oauth2' ],
 )
+
+
+if __name__ == "__main__":
+    setup( **META_DATA )
 
