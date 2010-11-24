@@ -40,15 +40,12 @@ class OAuthBackend(BaseBackend):
         """ Try to get Request Token from OAuth Provider and
             redirect user to provider's site for approval.
         """
-        callback = request.build_absolute_uri(reverse('publicauth-complete', args=[self.provider]))
-        url = self.__get_url(
-                http_url=self.REQUEST_TOKEN_URL,
-                parameters={ 'oauth_callback' : callback })
+        # callback = request.build_absolute_uri(reverse('publicauth-complete', args=[self.provider]))
+        url = self.__get_url( http_url=self.REQUEST_TOKEN_URL )
 
         response, content = httplib2.Http().request(url)
 
         if response[ 'status' ] != 200:
-            log.info(response)
             log.info(content)
             raise OAuthError( "No access to private resources.")
 
