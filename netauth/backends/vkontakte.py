@@ -16,8 +16,7 @@ class VkontakteBackend(OAuthBaseBackend):
     def validate(self, request, data):
         cookie_name = "vk_app_%s" % settings.VKONTAKTE_APPLICATION_ID
         try:
-            content = request.COOKIES[cookie_name]
-            cookie_data = self.parse_qs(content)
+            cookie_data = self.parse_qs(request.COOKIES[cookie_name])
             value = ""
             for i in ('expire', 'mid', 'secret', 'sid'):
                 value += "%s=%s" % (i, cookie_data[i][0] )
@@ -32,7 +31,7 @@ class VkontakteBackend(OAuthBaseBackend):
             log.info(cookie_data['sig'][0])
             log.info(md5(value + settings.VKONTAKTE_APPLICATION_SECRET).hexdigest())
             self.error(request)
-        return content
+        return data
 
     def get_extra_data(self, response):
         return self.parse_qs(response)
