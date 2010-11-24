@@ -11,6 +11,7 @@ from django.core.urlresolvers import reverse
 from django.utils import simplejson
 from django.contrib import messages
 
+from publicauth import log
 from publicauth.exceptions import Redirect
 from publicauth.backends import BaseBackend
 from publicauth import lang
@@ -47,6 +48,8 @@ class OAuthBackend(BaseBackend):
         response, content = httplib2.Http().request(url)
 
         if response[ 'status' ] != 200:
+            log.info(response)
+            log.info(content)
             raise OAuthError( "No access to private resources.")
 
         url = self.__get_url( token = Token.from_string( content ), http_url=self.AUTHORIZE_URL,)
