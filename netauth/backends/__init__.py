@@ -1,6 +1,5 @@
 import urlparse
 
-from django.conf import settings as global_settings
 from django.contrib import messages, auth
 from django.core.urlresolvers import reverse
 from httplib2 import Http
@@ -14,7 +13,7 @@ from netauth.utils import str_to_class
 
 class BaseBackend(object):
 
-    PROFILE_MAPPING = property(lambda self: getattr(global_settings, "%s_PROFILE_MAPPING" % self.provider.upper(), {}))
+    PROFILE_MAPPING = property(lambda self: getattr(settings, "%s_PROFILE_MAPPING" % self.provider.upper(), {}))
 
     def __init__(self, provider):
         self.provider = provider
