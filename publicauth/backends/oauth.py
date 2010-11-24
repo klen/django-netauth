@@ -45,9 +45,8 @@ class OAuthBackend(BaseBackend):
 
         response, content = httplib2.Http().request(url)
 
-        if response[ 'status' ] != 200:
+        if response[ 'status' ] != '200':
             log.info(content)
-            log.info(response)
             raise OAuthError( "No access to private resources.")
 
         url = self.__get_url( token = Token.from_string( content ), http_url=self.AUTHORIZE_URL,)
@@ -65,7 +64,7 @@ class OAuthBackend(BaseBackend):
         url = self.__get_url( http_url=self.ACCESS_TOKEN_URL, parameters=parameters)
         response, content = httplib2.Http().request(url)
 
-        if response[ 'status' ] != 200:
+        if response[ 'status' ] != '200':
             raise OAuthError( "No access to private resources.")
 
         self.identity = urlparse.parse_qs(content, keep_blank_values=False)['oauth_token'][0]
