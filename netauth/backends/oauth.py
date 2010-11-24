@@ -32,7 +32,7 @@ class OAuthBackend(OAuthBaseBackend):
         try:
             parameters = dict(oauth_token = data['oauth_token'], oauth_verifier = data.get('oauth_verifier', None))
         except MultiValueDictKeyError:
-            self.error()
+            self.error(request)
 
         request = self.get_request( http_url=self.ACCESS_TOKEN_URL, parameters=parameters)
         content = self.load_request(request)

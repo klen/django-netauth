@@ -19,7 +19,7 @@ class FacebookBackend(OAuthBaseBackend):
     def validate(self, request, data):
 
         if not data.get('code'):
-            self.error()
+            self.error(request)
 
         request = self.get_request( url=self.ACCESS_TOKEN_URL, parameters = {
             'client_id' : self.APPLICATION_ID,

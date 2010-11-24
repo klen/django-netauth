@@ -133,7 +133,7 @@ class OAuthBaseBackend( BaseBackend ):
         response, content = self.client.request(request.to_url())
         if response[ 'status' ] != '200':
             log.info(content)
-            self.error()
+            raise Redirect('netauth-login')
 
         return content
 
