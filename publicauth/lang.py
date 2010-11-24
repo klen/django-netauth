@@ -12,14 +12,20 @@ SUCCESS_LOGOUT = getattr(settings, "PUBLICAUTH_SUCCESS_LOGOUT", _('You have succ
 ACCOUNTS_MERGED = getattr(settings, "PUBLICAUTH_ACCOUNTS_MERGED", _('Your existing account was merged with new authentication account'))
 NOT_ACTIVATED = getattr(settings, "PUBLICAUTH_NOT_ACTIVATED",  _('Your account is not activated. Please activate it first.'))
 SUCCESSFULLY_AUTHENTICATED = getattr(settings, "PUBLICAUTH_SUCCESSFULLY_AUTHENTICATED", _('You have successfully authenticated'))
-FACEBOOK_INVALID_RESPONSE = getattr(settings, 
-                                    "PUBLICAUTH_FACEBOOK_INVALID_RESPONSE", 
+
+OAUTH_INVALID_RESPONSE = getattr(settings,
+                                    "PUBLICAUTH_OAUTH_INVALID_RESPONSE",
+                                    _('Invalid response received from oauth server, please start the authentication process again')
+                                    )
+
+FACEBOOK_INVALID_RESPONSE = getattr(settings,
+                                    "PUBLICAUTH_FACEBOOK_INVALID_RESPONSE",
                                     _('Invalid response received from facebook server, please start the authentication process again')
                                     )
-INVALID_RESPONSE_FROM_OPENID = getattr(settings, 
+INVALID_RESPONSE_FROM_OPENID = getattr(settings,
                                         "PUBLICAUTH_INVALID_RESPONSE_FROM_OPENID",
                                         ('Invalid response received from OpenID server, please start the authentication process again'))
-VKONTAKTE_INVALID_RESPONSE = getattr(settings, 
-                                    "PUBLICAUTH_VKONTAKTE_INVALID_RESPONSE", 
+VKONTAKTE_INVALID_RESPONSE = getattr(settings,
+                                    "PUBLICAUTH_VKONTAKTE_INVALID_RESPONSE",
                                     _('Invalid response received from vkontakte server, please start the authentication process again')
                                     )

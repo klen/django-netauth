@@ -6,6 +6,8 @@ class PublicBackend(object):
     """ Add this Authentication Backend to
         AUTHENTICATION_BACKENDS tuple in your settings.py
     """
+    supports_object_permissions = False
+    supports_anonymous_user = True
 
     def get_user(self, user_id):
         try:
@@ -24,3 +26,4 @@ class PublicBackend(object):
                 return None
         else:
             return None
+

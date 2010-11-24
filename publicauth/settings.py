@@ -1,6 +1,3 @@
-import re
-
-from django import forms
 from django.conf import settings
 
 
@@ -30,8 +27,8 @@ PUBLICAUTH_BACKEND_MAPPING = getattr(settings, "PUBLICAUTH_BACKEND_MAPPING", {  
     'openid': 'publicauth.backends.openid.OpenIDBackend',                                          #
     'google': 'publicauth.backends.google.GoogleBackend',                                          #
     'twitter': 'publicauth.backends.oauth.OAuthBackend',                                           #
-    'friendfeed': 'publicauth.backends.oauth.OAuthBackend',                                        #
     'facebook': 'publicauth.backends.facebook.FacebookBackend',                                    #
+    'friendfeed': 'publicauth.backends.oauth.OAuthBackend',                                        #
     'vkontakte': 'publicauth.backends.vkontakte.VkontakteBackend',                                 #
     }                                                                                              #
 )                                                                                                  #

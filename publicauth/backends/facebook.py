@@ -1,5 +1,8 @@
 from django.contrib import messages
 from django.conf import settings
+from django.core.urlresolvers import reverse
+
+from oauth2 import Request
 
 from publicauth.exceptions import Redirect
 from publicauth.backends import BaseBackend
@@ -7,6 +10,16 @@ from publicauth import lang
 
 
 class FacebookBackend(BaseBackend):
+
+    APP_ID = property(lambda self: getattr(settings, "%s_APP_ID" % self.provider.upper()))
+    AUTHORIZE_URL = property(lambda self: getattr(settings, "%s_AUTHORIZE_URL" % self.provider.upper()))
+
+    def begin( self, request, data ):
+        request = Request( self.AUTHORIZE_URL, parameters = {
+            'client_id' : self.APP_ID,
+            'redirect_uri' : request.build_absolute_uri(reverse('publicauth-complete', args=[self.provider])),
+        })
+        raise Redirect(request.to_url())
 
     def validate(self, request, data):
         if not request.facebook.validate_cookie_signature(request.COOKIES):
@@ -27,4 +40,7 @@ class FacebookBackend(BaseBackend):
     def get_extra_data(self, response):
         extra_fields = [i for i in self.PROFILE_MAPPING]
         return response.users.getInfo([self.identity], extra_fields)[0]
+
+    def get_url( self, http_url=None, parameters=dict() ):
+        pass
 

@@ -48,7 +48,8 @@ class OAuthBackend(BaseBackend):
 
         if response[ 'status' ] != '200':
             log.info(content)
-            raise OAuthError( "No access to private resources.")
+            messages.error(request, lang.OAUTH_INVALID_RESPONSE)
+            raise Redirect('publicauth-login')
 
         url = self.__get_url( token = Token.from_string( content ), http_url=self.AUTHORIZE_URL,)
         raise Redirect(url)
@@ -65,7 +66,8 @@ class OAuthBackend(BaseBackend):
         response, content = httplib2.Http().request(url)
 
         if response[ 'status' ] != '200':
-            raise OAuthError( "No access to private resources.")
+            messages.error(request, lang.OAUTH_INVALID_RESPONSE)
+            raise Redirect('publicauth-login')
 
         twitter_data = urlparse.parse_qs(content, keep_blank_values=False)
         self.identity = twitter_data['oauth_token'][0]
