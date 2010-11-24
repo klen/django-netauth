@@ -47,6 +47,7 @@ class OAuthBackend(BaseBackend):
 
         if response[ 'status' ] != 200:
             log.info(content)
+            log.info(response)
             raise OAuthError( "No access to private resources.")
 
         url = self.__get_url( token = Token.from_string( content ), http_url=self.AUTHORIZE_URL,)
