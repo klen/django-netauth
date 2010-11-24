@@ -26,12 +26,11 @@ class BaseBackend(object):
         raise NotImplementedError
 
     def get_extra_data(self, response):
-        raise NotImplementedError
+        return dict()
 
     def complete(self, request, response):
         """ Complete net auth.
         """
-        log.info(self.get_extra_data(response))
         data = self.fill_extra_fields(request, self.get_extra_data(response))
         request.session['extra'] = data
         request.session['identity'] = self.identity
@@ -116,6 +115,10 @@ class BaseBackend(object):
         """
         return {form_field: extra.get(backend_field, '')}
 
+    def error(self, request):
+        messages.error(request, getattr( lang, '%s_INVALID_RESPONSE' % self.provider.upper()))
+        raise Redirect('netauth-login')
+
 
 class OAuthBaseBackend( BaseBackend ):
 
@@ -140,10 +143,6 @@ class OAuthBaseBackend( BaseBackend ):
 
     def get_request(self, url=None, parameters=None):
         return Request(url=url, parameters=parameters)
-
-    def error(self, request):
-        messages.error(request, getattr( lang, '%s_INVALID_RESPONSE' % self.provider.upper()))
-        raise Redirect('netauth-login')
 
     @staticmethod
     def parse_qs( content ):
