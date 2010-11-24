@@ -16,5 +16,6 @@ setup(
     license = "BSD",
     keywords = "django",
     url = "http://github.com/klen/django-publicauth.git",
+    install_requires = [ 'python-openid' ],
 )
 
