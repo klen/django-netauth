@@ -16,7 +16,7 @@ class NetBackend(object):
             return None
 
     def authenticate(self, identity=None, provider=None):
-        """ Authenticate user by public identity.
+        """ Authenticate user by net identity.
         """
         if identity:
             try:
@@ -26,4 +26,3 @@ class NetBackend(object):
                 return None
         else:
             return None
-

@@ -68,4 +68,3 @@ def get_instance_from_path(path, *args, **kwargs):
 
 def get_backend(name):
     return get_instance_from_path(settings.BACKEND_MAPPING[name], name)
-
