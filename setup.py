@@ -1,8 +1,9 @@
 from setuptools import setup, find_packages
+from publicauth import VERSION, PROJECT
 
 setup(
-    name = "django-publicauth",
-    version = "0.0.2",
+    name = PROJECT,
+    version = VERSION,
     packages = find_packages(),
     author = "Kirill Klenov",
     author_email = "horneds@gmail.com",
