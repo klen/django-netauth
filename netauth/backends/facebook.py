@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils import simplejson
 
 from netauth.backends import OAuthBaseBackend
 from netauth.exceptions import Redirect
@@ -32,6 +33,6 @@ class FacebookBackend(OAuthBaseBackend):
         return content
 
     def get_extra_data(self, response):
-
-        extra_fields = [i for i in self.PROFILE_MAPPING]
-        return response.users.getInfo([self.identity], extra_fields)[0]
+        request = self.get_request( url=self.API_URL, parameters = { 'access_token': self.identity })
+        content = self.load_request(request)
+        return simplejson.loads(content)
