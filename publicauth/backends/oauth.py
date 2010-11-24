@@ -31,9 +31,9 @@ class OAuthBackend(BaseBackend):
     API_URL = property(lambda self: getattr(global_settings, "%s_API_URL" % self.provider.upper()))
 
     def __init__( self, *args, **kwargs ):
+        super( OAuthBackend, self ).__init__( *args, **kwargs )
         self.consumer = Consumer(self.CONSUMER_KEY, self.CONSUMER_SECRET)
         self.signature_method = SignatureMethod_HMAC_SHA1()
-        super( OAuthBackend, self ).__init__( *args, **kwargs )
 
     def begin(self, request, data):
         """ Try to get Request Token from OAuth Provider and
