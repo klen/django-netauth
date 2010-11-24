@@ -55,9 +55,8 @@ class OAuthBackend(BaseBackend):
 
     def validate(self, request, data):
         try:
-            parameters = dict(
-                    oauth_token = data['oauth_token'],
-                    oauth_verifier = data.get('oauth_verifier', None))
+            parameters = dict(  oauth_token = data['oauth_token'],
+                                oauth_verifier = data.get('oauth_verifier', None))
         except MultiValueDictKeyError:
             messages.error(request, lang.BACKEND_ERROR)
             raise Redirect('publicauth-login')
@@ -68,7 +67,9 @@ class OAuthBackend(BaseBackend):
         if response[ 'status' ] != '200':
             raise OAuthError( "No access to private resources.")
 
-        self.identity = urlparse.parse_qs(content, keep_blank_values=False)['oauth_token'][0]
+        twitter_data = urlparse.parse_qs(content, keep_blank_values=False)
+        log.info( twitter_data )
+        self.identity = twitter_data['oauth_token'][0]
         return content
 
     def complete(self, request, response):
