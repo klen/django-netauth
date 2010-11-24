@@ -15,7 +15,7 @@ class FacebookBackend(BaseBackend):
     AUTHORIZE_URL = property(lambda self: getattr(settings, "%s_AUTHORIZE_URL" % self.provider.upper()))
 
     def begin( self, request, data ):
-        request = Request( self.AUTHORIZE_URL, parameters = {
+        request = Request( url=self.AUTHORIZE_URL, parameters = {
             'client_id' : self.APP_ID,
             'redirect_uri' : request.build_absolute_uri(reverse('publicauth-complete', args=[self.provider])),
         })
