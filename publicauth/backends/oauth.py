@@ -11,7 +11,7 @@ from django.core.urlresolvers import reverse
 from django.utils import simplejson
 from django.contrib import messages
 
-from public.exceptions import Redirect
+from publicauth.exceptions import Redirect
 from publicauth.backends import BaseBackend
 from publicauth import lang
 

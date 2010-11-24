@@ -9,7 +9,7 @@ from openid.consumer import consumer, discover
 from openid.extensions.ax import FetchRequest, AttrInfo
 from openid.extensions.sreg import SRegRequest, SRegResponse
 
-from public.exceptions import Redirect
+from publicauth.exceptions import Redirect
 from publicauth import settings, lang
 from publicauth.backends import BaseBackend
 

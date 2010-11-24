@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.conf import settings
 
-from public.exceptions import Redirect
+from publicauth.exceptions import Redirect
 from publicauth.backends import BaseBackend
 from publicauth import lang
 

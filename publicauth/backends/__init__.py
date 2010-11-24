@@ -2,7 +2,7 @@ from django.conf import settings as global_settings
 from django.contrib.auth.models import User
 from django.contrib import messages, auth
 
-from public.exceptions import Redirect
+from publicauth.exceptions import Redirect
 from publicauth import settings, lang
 from publicauth.models import PublicID
 from publicauth.utils import str_to_class
