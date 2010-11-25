@@ -1,0 +1,11 @@
+Django openid, oauth authentification.
+
+Support next sites:
+
+- http://google.com
+- http://yandex.ru
+- http://vkontakte.ru
+- http://facebook.com
+- http://twitter.com
+
+and custom openid and oauth providers
