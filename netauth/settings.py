@@ -56,3 +56,6 @@ FACEBOOK_API_URL = getattr(settings, "FACEBOOK_API_URL", "https://graph.facebook
 
 YANDEX_AUTHORIZE_URL =  getattr(settings, "YANDEX_AUTHORIZE_URL", "https://oauth.yandex.ru/authorize")
 YANDEX_API_URL = getattr(settings, "YANDEX_API_URL", "https://api-yaru.yandex.ru/me")
+YANDEX_PROFILE_MAPPING = getattr(settings, "YANDEX_PROFILE_MAPPING", {
+    'name': 'username',
+})

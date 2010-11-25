@@ -1,8 +1,10 @@
-from netauth.backends import OAuthBaseBackend
-import ipdb as pdb
-from netauth.exceptions import Redirect
+from xml.etree.ElementTree import fromstring
+
 from django.conf import settings
-from django.core.serializers import xml_serializer
+
+from netauth.backends import OAuthBaseBackend
+from netauth.exceptions import Redirect
+
 
 class YandexBackend( OAuthBaseBackend ):
 
@@ -21,5 +23,12 @@ class YandexBackend( OAuthBaseBackend ):
     def get_extra_data(self, response):
         request = self.get_request( url=self.API_URL, parameters = { 'oauth_token': self.identity })
         content = self.load_request( request )
-        xml_serializer.Deserializer( content )
-        pdb.set_trace() ############################## XXX Breakpoint ##############################
+        tree = fromstring(content)
+        namespace = '{http://api.yandex.ru/yaru/}'
+        fields = [ 'name', 'email', 'city', 'country' ]
+        result = dict()
+        for name in fields:
+            value = tree.find( "%s%s" % ( namespace, name ))
+            if value and value.text:
+                result[ name ] = value.text
+        return result
