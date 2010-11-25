@@ -8,9 +8,10 @@ from netauth import VERSION, PROJECT
 MODULE_NAME = 'netauth'
 PACKAGE_DATA = list()
 
-for root, dirs, files in os.walk( os.path.join( MODULE_NAME, 'templates' )):
-    for filename in files:
-        PACKAGE_DATA.append("%s/%s" % ( root[len(MODULE_NAME)+1:], filename ))
+for directory in [ 'templates', 'static' ]:
+    for root, dirs, files in os.walk( os.path.join( MODULE_NAME, directory )):
+        for filename in files:
+            PACKAGE_DATA.append("%s/%s" % ( root[len(MODULE_NAME)+1:], filename ))
 
 
 def read( fname ):
@@ -38,7 +39,5 @@ META_DATA = dict(
     install_requires = [ 'python-openid', 'oauth2' ],
 )
 
-
 if __name__ == "__main__":
     setup( **META_DATA )
-
