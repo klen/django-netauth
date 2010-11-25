@@ -1,0 +1,52 @@
+{% load netauth_tags %}
+
+<link href="{{ STATIC_URL }}netauth/css/main.css" media="screen, projection" rel="stylesheet" type="text/css" />
+
+<div class="b-providers">
+
+    {# google #}
+    <a class="b-providers_item b-providers_item_google" alt="Google" href="{% url netauth-begin 'google' %}?openid_url=https://www.google.com/accounts/o8/id&next={{ request.GET.next }}"></a>
+
+    {# yandex #}
+    {% if ''|option:"YANDEX_APPLICATION_ID" %}
+        <a class="b-providers_item b-providers_item_yandex" alt="Yandex" href="{% url netauth-begin 'yandex' %}?next={{ request.GET.next }}"></a>
+    {% endif %}
+
+    {# mail #}
+    <a class="b-providers_item b-providers_item_mail" alt="Mail" href="#"></a>
+
+    {# vkontakte #}
+    {% if ''|option:"VKONTAKTE_APPLICATION_ID" %}
+        <a class="b-providers_item b-providers_item_vkontakte" alt="Vkontakte" href="#" onclick="vk_login();"></a>
+        <div id="vk_api_transport" style="position: absolute; top: -10000px;"></div>
+        <script type="text/javascript">
+            window.vkAsyncInit = function() { VK.init({ apiId: '{{ VKONTAKTE_APPLICATION_ID }}' }); };
+            function vk_login () { VK.Auth.login(function( response ){
+                if ( response.session ) document.location.href = "{% url netauth-complete 'vkontakte' %}";
+                else document.location.href = "{% url netauth-login %}"
+            });}
+            setTimeout(function() { var el = document.createElement("script");
+                el.type = "text/javascript"; el.src = "http://vkontakte.ru/js/api/openapi.js";
+                el.async = true; document.getElementById("vk_api_transport").appendChild(el);
+            }, 0);
+        </script>
+    {% endif %}
+
+    {# twitter #}
+    {% if ''|option:"TWITTER_CONSUMER_KEY" %}
+        <a class="b-providers_item b-providers_item_twitter" alt="Twitter" href="{% url netauth-begin 'twitter' %}?next={{ request.GET.next }}"></a>
+    {% endif %}
+
+    {# facebook #}
+    {% if ''|option:"FACEBOOK_APPLICATION_ID" %}
+        <a class="b-providers_item b-providers_item_facebook" alt="Facebook" href="{% url netauth-begin 'facebook' %}?next={{ request.GET.next }}"></a>
+    {% endif %}
+
+    {# openid #}
+    <form action="{% url netauth-begin 'openid' %}?next={{ request.GET.next }}" method="post" id="openid_login">
+        <a class="b-providers_item b-providers_item_openid" alt="Facebook" href="{% url netauth-begin 'openid' %}?next={{ request.GET.next }}"></a>
+        <input type="text" name="openid_url" /><input type="submit" value="Continue"/>
+    </form>
+
+</div>
+

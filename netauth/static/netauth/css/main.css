@@ -1,19 +1,10 @@
-.b-providers {
-    padding: 5px 0;
-    overflow:hidden;
-}
-
-.b-providers_item {
-    background: url("/static/netauth/images/providers_sprite.png") no-repeat;
-    display: inline-block;
-    height: 25px;
-    width:90px;
-    margin: 2px 5px;
-}
-
-    .b-providers_item_google { background-position: 0 0; }
-    .b-providers_item_yandex { background-position: 0 -25px; }
-    .b-providers_item_mail { background-position: 0 -50px; }
-    .b-providers_item_vkontakte { background-position: 0 -75px; }
-    .b-providers_item_facebook { background-position: 0 -100px; }
-    .b-providers_item_twitter { background-position: 0 -125px; }
+.b-providers { padding: 5px 0; overflow:hidden; }
+.b-providers_item { background: url("/static/netauth/images/providers_sprite.png") no-repeat;
+    display: inline-block; height: 25px; width:90px; margin: 2px 5px; }
+.b-providers_item_google { background-position: 0 0; }
+.b-providers_item_yandex { background-position: 0 -26px; }
+.b-providers_item_mail { background-position: 0 -51px; }
+.b-providers_item_vkontakte { background-position: 0 -75px; }
+.b-providers_item_facebook { background-position: 0 -100px; }
+.b-providers_item_twitter { background-position: 0 -125px; }
+.b-providers_item_openid { background-position: 0 -150px; }

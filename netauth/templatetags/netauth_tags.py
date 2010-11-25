@@ -14,9 +14,11 @@ def option( value, name ):
 register.filter(option)
 
 
-def vk_widget():
-    """ Render vkontakte widget.
+def netauth_widget():
+    """ Render netauth controls.
     """
-    return dict( VKONTAKTE_APPLICATION_ID = django_settings.VKONTAKTE_APPLICATION_ID )
+    return dict(
+            VKONTAKTE_APPLICATION_ID = django_settings.VKONTAKTE_APPLICATION_ID,
+            STATIC_URL = django_settings.STATIC_URL )
 
-register.inclusion_tag('netauth/vk_widget.html')(vk_widget)
+register.inclusion_tag('netauth/netauth_widget.html')(netauth_widget)
