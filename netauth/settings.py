@@ -25,6 +25,7 @@ BACKEND_MAPPING = getattr(settings, "NETAUTH_BACKEND_MAPPING", {
     'facebook': 'netauth.backends.facebook.FacebookBackend',
     'friendfeed': 'netauth.backends.oauth.OAuthBackend',
     'vkontakte': 'netauth.backends.vkontakte.VkontakteBackend',
+    'yandex': 'netauth.backends.yandex.YandexBackend',
     }
 )
 
@@ -53,3 +54,4 @@ FACEBOOK_AUTHORIZE_URL = getattr(settings, "FACEBOOK_AUTHORIZE_URL", "https://gr
 FACEBOOK_ACCESS_TOKEN_URL = getattr(settings, "FACEBOOK_ACCESS_TOKEN_URL", "https://graph.facebook.com/oauth/access_token")
 FACEBOOK_API_URL = getattr(settings, "FACEBOOK_API_URL", "https://graph.facebook.com/me")
 
+YANDEX_AUTHORIZE_URL =  getattr(settings, "YANDEX_AUTHORIZE_URL", "https://oauth.yandex.ru/authorize")

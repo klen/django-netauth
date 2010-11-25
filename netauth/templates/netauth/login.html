@@ -20,6 +20,11 @@
         <a href="{% url netauth-begin 'facebook' %}?next={{ request.GET.next }}">Facebook</a>
     {% endif %}
 
+    {# yandex #}
+    {% if ''|option:"YANDEX_APPLICATION_ID" %}
+        <a href="{% url netauth-begin 'yandex' %}?next={{ request.GET.next }}">Yandex</a>
+    {% endif %}
+
     {# vkontakte widget #}
     {% if ''|option:"VKONTAKTE_APPLICATION_ID" %}{% vk_widget %}{% endif %}
 
