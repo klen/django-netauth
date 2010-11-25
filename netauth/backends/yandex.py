@@ -1,4 +1,5 @@
 from xml.etree.ElementTree import fromstring
+import ipdb as pdb
 
 from django.conf import settings
 
@@ -31,4 +32,5 @@ class YandexBackend( OAuthBaseBackend ):
             value = tree.find( "%s%s" % ( namespace, name ))
             if value and value.text:
                 result[ name ] = value.text
+        pdb.set_trace() ############################## XXX Breakpoint ##############################
         return result
