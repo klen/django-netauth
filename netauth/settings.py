@@ -55,3 +55,4 @@ FACEBOOK_ACCESS_TOKEN_URL = getattr(settings, "FACEBOOK_ACCESS_TOKEN_URL", "http
 FACEBOOK_API_URL = getattr(settings, "FACEBOOK_API_URL", "https://graph.facebook.com/me")
 
 YANDEX_AUTHORIZE_URL =  getattr(settings, "YANDEX_AUTHORIZE_URL", "https://oauth.yandex.ru/authorize")
+YANDEX_API_URL = getattr(settings, "YANDEX_API_URL", "https://api-yaru.yandex.ru/me")

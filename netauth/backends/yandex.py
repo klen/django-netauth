@@ -1,4 +1,5 @@
 from netauth.backends import OAuthBaseBackend
+import ipdb as pdb
 from netauth.exceptions import Redirect
 from django.conf import settings
 
@@ -15,3 +16,7 @@ class YandexBackend( OAuthBaseBackend ):
             self.identity = data['access_token']
         except KeyError:
             self.error(request)
+
+    def get_extra_data(self, response):
+        request = self.get_request( url=self.API_URL, parameters = { 'oauth_token': self.identity })
+        pdb.set_trace() ############################## XXX Breakpoint ##############################
