@@ -6,7 +6,7 @@
     </head>
     <body>
         <script language="javascript" type="text/javascript">
-            var args = document.location.split('#')[1]
+            var args = document.location.href.split('#')[1]
             document.location.href = "{% url netauth-complete 'yandex' %}?" + args;
         </script>
     </body>
