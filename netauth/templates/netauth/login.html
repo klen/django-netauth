@@ -1,6 +1,5 @@
-{% load netauth_tags %}
-
 {% extends 'base.html' %}
+{% load netauth_tags %}
 
 {% block content %}
     <form action="{% url netauth-begin 'openid' %}?next={{ request.GET.next }}" method="post" id="openid_login">
