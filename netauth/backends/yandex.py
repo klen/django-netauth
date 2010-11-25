@@ -30,7 +30,6 @@ class YandexBackend( OAuthBaseBackend ):
         result = dict()
         for name in fields:
             value = tree.find( "%s%s" % ( namespace, name ))
-            if value and value.text:
-                result[ name ] = value.text
+            result[ name ] = value.text
         pdb.set_trace() ############################## XXX Breakpoint ##############################
         return result
