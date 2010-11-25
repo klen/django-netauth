@@ -2,6 +2,7 @@ from netauth.backends import OAuthBaseBackend
 import ipdb as pdb
 from netauth.exceptions import Redirect
 from django.conf import settings
+from django.core.serializers import xml_serializer
 
 class YandexBackend( OAuthBaseBackend ):
 
@@ -19,4 +20,6 @@ class YandexBackend( OAuthBaseBackend ):
 
     def get_extra_data(self, response):
         request = self.get_request( url=self.API_URL, parameters = { 'oauth_token': self.identity })
+        content = self.load_request( request )
+        xml_serializer.Deserializer( content )
         pdb.set_trace() ############################## XXX Breakpoint ##############################
