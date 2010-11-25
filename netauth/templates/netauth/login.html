@@ -4,39 +4,39 @@
 {% block content %}
     <link href="{{ STATIC_URL }}netauth/css/main.css" media="screen, projection" rel="stylesheet" type="text/css" />
 
-    <form action="{% url netauth-begin 'openid' %}?next={{ request.GET.next }}" method="post" id="openid_login">
-        Openid URL
-        <input type="text" name="openid_url" />
-        <p><input type="submit" value="Continue"/></p>
-    </form>
+    <div class="b-providers">
 
-    {# google #}
-    <a class="b-providers_item b-providers_item_google" href="{% url netauth-begin 'google' %}?openid_url=https://www.google.com/accounts/o8/id&next={{ request.GET.next }}"></a>
+        {# google #}
+        <a class="b-providers_item b-providers_item_google" alt="Google" href="{% url netauth-begin 'google' %}?openid_url=https://www.google.com/accounts/o8/id&next={{ request.GET.next }}"></a>
 
-    {# yandex #}
-    {% if ''|option:"YANDEX_APPLICATION_ID" %}
-        <a class="b-providers_item b-providers_item_yandex" href="{% url netauth-begin 'yandex' %}?next={{ request.GET.next }}"></a>
-    {% endif %}
+        {# yandex #}
+        {% if ''|option:"YANDEX_APPLICATION_ID" %}
+            <a class="b-providers_item b-providers_item_yandex" alt="Yandex" href="{% url netauth-begin 'yandex' %}?next={{ request.GET.next }}"></a>
+        {% endif %}
 
-    {# mail #}
-    <a class="b-providers_item b-providers_item_mail" href="#"></a>
+        {# mail #}
+        <a class="b-providers_item b-providers_item_mail" alt="Mail" href="#"></a>
 
-    {# vkontakte #}
-    {% if ''|option:"VKONTAKTE_APPLICATION_ID" %}
-        <a class="b-providers_item b-providers_item_vkontakte" href="{% url netauth-begin 'vkontakte' %}?next={{ request.GET.next }}"></a>
-    {% endif %}
+        {# vkontakte #}
+        {% if ''|option:"VKONTAKTE_APPLICATION_ID" %}
+            <a class="b-providers_item b-providers_item_vkontakte" alt="Vkontakte" href="#" onclick="vk_login();"></a>
+            {% vk_widget %}
+        {% endif %}
 
-    {# twitter #}
-    {% if ''|option:"TWITTER_CONSUMER_KEY" %}
-        <a class="b-providers_item b-providers_item_twitter" href="{% url netauth-begin 'twitter' %}?next={{ request.GET.next }}"></a>
-    {% endif %}
+        {# twitter #}
+        {% if ''|option:"TWITTER_CONSUMER_KEY" %}
+            <a class="b-providers_item b-providers_item_twitter" alt="Twitter" href="{% url netauth-begin 'twitter' %}?next={{ request.GET.next }}"></a>
+        {% endif %}
 
-    {# facebook #}
-    {% if ''|option:"FACEBOOK_APPLICATION_ID" %}
-        <a class="b-providers_item b-providers_item_facebook" href="{% url netauth-begin 'facebook' %}?next={{ request.GET.next }}"></a>
-    {% endif %}
+        {# facebook #}
+        {% if ''|option:"FACEBOOK_APPLICATION_ID" %}
+            <a class="b-providers_item b-providers_item_facebook" alt="Facebook" href="{% url netauth-begin 'facebook' %}?next={{ request.GET.next }}"></a>
+        {% endif %}
+        
+        <form action="{% url netauth-begin 'openid' %}?next={{ request.GET.next }}" method="post" id="openid_login">
+            Openid URL <input type="text" name="openid_url" /> <input type="submit" value="Continue"/>
+        </form>
 
-    {# vkontakte widget #}
-    {# {% if ''|option:"VKONTAKTE_APPLICATION_ID" %}{% vk_widget %}{% endif %} #}
+    </div>
 
 {% endblock %}
