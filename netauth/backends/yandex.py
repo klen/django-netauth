@@ -11,7 +11,7 @@ class YandexBackend( OAuthBaseBackend ):
         raise Redirect(request.to_url())
 
     def validate( self, request, data ):
-        pass
-
-    def complite( self, request, data ):
-        pass
+        try:
+            self.identity = data['access_token']
+        except KeyError:
+            self.error(request)

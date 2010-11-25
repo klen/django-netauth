@@ -10,4 +10,6 @@ urlpatterns = patterns('',
     url(r'^extra/(\w+)/$', views.extra, name='netauth-extra'),
     url(r'^login/$', direct_to_template, {'template': 'netauth/login.html'}, name='netauth-login'),
     url(r'^logout/$', views.logout, name='netauth-logout'),
+
+    url(r'^ya_proxy/$', direct_to_template, {'template': 'netauth/fuck_yandex_ancor_proxy.html'}, name='netauth-yandex-proxy'),
 )
