@@ -26,8 +26,10 @@ Setup
 ------
 
 - Add 'netauth' to INSTALLED_APPS ::
+
   INSTALLED_APPS += ( netauth, )
 
 - Add 'netauth.middleware.RedirectMiddleware' to MIDDLEWARE_CLASSES ::
+
   MIDDLEWARE_CLASSES += ( netauth.middleware.RedirectMiddleware, )
 
