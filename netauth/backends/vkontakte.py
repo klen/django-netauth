@@ -14,18 +14,17 @@ class VkontakteBackend(OAuthBaseBackend):
 
     def validate(self, request, data):
         try:
-            sig = data['hash']
-            safe_sig = "%s%s%s" % ( settings.VKONTAKTE_APPLICATION_ID, data['uid'], settings.VKONTAKTE_APPLICATION_SECRET )
-            safe_sig = md5(safe_sig).hexdigest()
-        except KeyError:
+            content = request.COOKIE[ "vk_app_%s" % settings.VKONTAKTE_APPLICATION_ID ]
+            cd = self.parse_qs(content)
+            value = ''.join(["%s=%s" % (i, cd[i][-1]) for i in ('expire', 'mid', 'secret', 'sid')])
+            if cd['sig'][-1] == md5(value + settings.VKONTAKTE_APPLICATION_SECRET).hexdigest():
+                self.identity = cd['mid'][-1]
+            else:
+                raise ValueError
+        except ( KeyError, ValueError ):
             self.error(request)
 
-        if sig == safe_sig:
-            self.identity = data['uid']
-        else:
-            self.error(request)
-
-        return data
+        return content
 
     def get_extra_data(self, response):
         return response
