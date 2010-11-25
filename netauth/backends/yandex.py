@@ -19,13 +19,13 @@ class YandexBackend( OAuthBaseBackend ):
             self.identity = data['access_token']
         except KeyError:
             self.error(request)
+        request = self.get_request(url=self.API_URL, parameters = { 'oauth_token': self.identity })
+        return self.load_request(request)
 
     def get_extra_data(self, response):
-        request = self.get_request( url=self.API_URL, parameters = { 'oauth_token': self.identity })
-        content = self.load_request( request )
-        tree = fromstring(content)
+        tree = fromstring(response)
         namespace = '{http://api.yandex.ru/yaru/}'
-        fields = [ 'name', 'email', 'city', 'country' ]
+        fields = ['name', 'email', 'city', 'country', 'sex', 'mobile_phone', 'metro']
         result = dict()
         for name in fields:
             value = tree.find( "%s%s" % ( namespace, name ))

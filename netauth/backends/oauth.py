@@ -45,9 +45,6 @@ class OAuthBackend(OAuthBaseBackend):
         content = self.load_request(request)
         return simplejson.loads(content)
 
-    def extract_data(self, extra, backend_field, form_field):
-        return {form_field: extra.get(backend_field, '')}
-
     def get_request( self, token=None, http_url=None, parameters=dict() ):
         request = Request.from_consumer_and_token( self.consumer, token = token,
                     http_url=http_url, parameters=parameters)
