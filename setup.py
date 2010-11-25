@@ -13,15 +13,19 @@ for root, dirs, files in os.walk( os.path.join( MODULE_NAME, 'templates' )):
         PACKAGE_DATA.append("%s/%s" % ( root[len(MODULE_NAME)+1:], filename ))
 
 
+def read( fname ):
+    try:
+        return open( os.path.join( os.path.dirname( __file__ ), fname ) ).read()
+    except IOError:
+        return ''
+
+
 META_DATA = dict(
     name = PROJECT,
     version = VERSION,
-    description = "django authentication application.",
-    long_description = """
-        **Download:**
-            - git clone http://github.com/klen/django-netauth.git
-    """,
-    license = "BSD",
+    description = read('DESCRIPTION'),
+    long_description = read('README.rst'),
+    license='Public domain',
 
     author = "Kirill Klenov",
     author_email = "horneds@gmail.com",
