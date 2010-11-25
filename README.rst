@@ -80,3 +80,12 @@ Vkontakte
 - Go to  http://vkontakte.ru/apps.php?act=add&site=1 and create application
 
 - Add VKONTAKTE_APPLICATION_ID and VKONTAKTE_APPLICATION_SECRET in your settings file
+
+
+Note
+-----
+
+You need to setup messages-framework_ as described in django documentation
+
+
+.. _messages-framework: http://docs.djangoproject.com/en/dev/ref/contrib/messages/#ref-contrib-messages
