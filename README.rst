@@ -3,7 +3,7 @@
 django-netauth
 ##############
 
-*Django netauth* is django application that allows authenticate users through OpenID/OAuth/Facebook/Vkontakte.
+**Django netauth** is django application that allows authenticate users through OpenID/OAuth/Facebook/Vkontakte.
 
 .. contents::
 
@@ -18,7 +18,7 @@ Requirements
 Installation
 ------------
 
-*Django netauth* should be installed using pip: ::
+**Django netauth** should be installed using pip: ::
 
     pip install git+git://github.com/klen/django-netauth.git
 
