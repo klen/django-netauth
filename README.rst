@@ -22,6 +22,7 @@ Installation
 
     pip install git+git://github.com/klen/django-netauth.git
 
+
 Setup
 ------
 
