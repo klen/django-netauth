@@ -28,11 +28,11 @@ Setup
 
 - Add 'netauth' to INSTALLED_APPS ::
 
-  INSTALLED_APPS += ( netauth, )
+  INSTALLED_APPS += ( 'netauth', )
 
 - Add 'netauth.middleware.RedirectMiddleware' to MIDDLEWARE_CLASSES ::
 
-  MIDDLEWARE_CLASSES += ( netauth.middleware.RedirectMiddleware, )
+  MIDDLEWARE_CLASSES += ( 'netauth.middleware.RedirectMiddleware', )
 
 - Add netauth urls to base urls ::
 
@@ -41,6 +41,8 @@ Setup
 - Add netauth backend to AUTHENTICATION_BACKENDS ::
 
   AUTHENTICATION_BACKENDS += ( 'netauth.auth.NetBackend', )
+
+See services setup: `Facebook`_, `Twitter`_, `Yandex`_, `Vkontakte`_
 
 
 Use netauth
