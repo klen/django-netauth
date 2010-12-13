@@ -42,7 +42,7 @@ Setup
 
   AUTHENTICATION_BACKENDS += ( 'netauth.auth.NetBackend', )
 
-See services setup: facebook_, `Twitter`_, `Yandex`_, `Vkontakte`_
+- See services setup bellow.
 
 
 Use netauth
@@ -53,7 +53,22 @@ Use netauth
 3) Create custom interface
 
 
-.. _facebook: Facebook
+Extra fields
+-------------
+In order to fill extra fields that may be required by your user profile, you need to setup couple of variables in settings.py of your project.
+
+The name of variable should be uppercased name of backend + "_PROFILE_MAPPING". For example: GOOGLE_PROFILE_MAPPING, TWITTER_PROFILE_MAPPING, etc..
+
+The value of this variable must be dictionary with name of the field on the provider side and its value must be name of your form field. For example:
+
+TWITTER_PROFILE_MAPPING = { 'screen_name': 'username', }
+
+Here you can see that 'screen_name' is what you asking from twitter, in your EXTRA_FORM you will see the value of this under key 'username'. This is because every authentication method can provide different names for its data and you need to unify it.
+
+Also you can override the EXTRA_FORM itself and set NETAUTH_EXTRA_FORM variable with value as path to your custom form. Dont forget to implement save method in this form.
+
+
+Facebook
 ---------
 
 - Go to http://www.facebook.com/developers/createapp.php and create application
