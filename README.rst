@@ -53,8 +53,7 @@ Use netauth
 3) Create custom interface
 
 
-.. _facebook:
-Facebook
+.. _facebook: Facebook
 ---------
 
 - Go to http://www.facebook.com/developers/createapp.php and create application
