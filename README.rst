@@ -42,7 +42,7 @@ Setup
 
   AUTHENTICATION_BACKENDS += ( 'netauth.auth.NetBackend', )
 
-See services setup: `Facebook`_, `Twitter`_, `Yandex`_, `Vkontakte`_
+See services setup: facebook_, `Twitter`_, `Yandex`_, `Vkontakte`_
 
 
 Use netauth
@@ -53,6 +53,7 @@ Use netauth
 3) Create custom interface
 
 
+.. _facebook:
 Facebook
 ---------
 
