@@ -100,6 +100,8 @@ class BaseBackend(object):
             for backend_field, form_field in self.PROFILE_MAPPING.items():
                 data.update(self.extract_data(extra, backend_field, form_field))
 
+        log.info(data)
+
         form = str_to_class(settings.EXTRA_FORM)(data)
         if form.is_valid():
             form.save(request, self.identity, self.provider)
@@ -122,6 +124,7 @@ class BaseBackend(object):
 
 class OAuthBaseBackend( BaseBackend ):
 
+    REQUEST_TOKEN_URL = property(lambda self: getattr(settings, "%s_REQUEST_TOKEN_URL" % self.provider.upper()))
     AUTHORIZE_URL = property(lambda self: getattr(settings, "%s_AUTHORIZE_URL" % self.provider.upper()))
     ACCESS_TOKEN_URL = property(lambda self: getattr(settings, "%s_ACCESS_TOKEN_URL" % self.provider.upper()))
     API_URL = property(lambda self: getattr(settings, "%s_API_URL" % self.provider.upper()))
@@ -135,8 +138,9 @@ class OAuthBaseBackend( BaseBackend ):
 
     def load_request( self, request ):
         response, content = self.client.request(request.to_url())
+        log.info(content)
         if response[ 'status' ] != '200':
-            log.info(content)
+            log.info(request.to_url())
             raise Redirect('netauth-login')
 
         return content

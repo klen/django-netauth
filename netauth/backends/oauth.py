@@ -11,7 +11,6 @@ class OAuthBackend(OAuthBaseBackend):
 
     CONSUMER_KEY = property(lambda self: getattr(global_settings, "%s_CONSUMER_KEY" % self.provider.upper()))
     CONSUMER_SECRET = property(lambda self: getattr(global_settings, "%s_CONSUMER_SECRET" % self.provider.upper()))
-    REQUEST_TOKEN_URL = property(lambda self: getattr(global_settings, "%s_REQUEST_TOKEN_URL" % self.provider.upper()))
 
     def __init__( self, *args, **kwargs ):
         super( OAuthBackend, self ).__init__( *args, **kwargs )
