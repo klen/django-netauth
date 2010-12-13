@@ -43,8 +43,9 @@ LOGIN_REDIRECT_URL = getattr(settings, "LOGIN_REDIRECT_URL")
 LOGOUT_URL = getattr(settings, "LOGOUT_URL")
 
 # OAuth providers settings
-TWITTER_ACCESS_TOKEN_URL = getattr(settings, "TWITTER_ACCESS_TOKEN_URL", "https://api.twitter.com/oauth/access_token")
-TWITTER_AUTHORIZE_URL = getattr(settings, "TWITTER_AUTHORIZE_URL", "https://api.twitter.com/oauth/authorize")
+TWITTER_REQUEST_TOKEN_URL = getattr(settings, "TWITTER_REQUEST_TOKEN_URL", "http://twitter.com/oauth/request_token")
+TWITTER_ACCESS_TOKEN_URL = getattr(settings, "TWITTER_ACCESS_TOKEN_URL", "http://twitter.com/oauth/access_token")
+TWITTER_AUTHORIZE_URL = getattr(settings, "TWITTER_AUTHORIZE_URL", "http://twitter.com/oauth/authorize")
 TWITTER_API_URL = getattr(settings, "TWITTER_API_URL", "http://api.twitter.com/1/users/show.json?user_id=%s")
 TWITTER_PROFILE_MAPPING = getattr(settings, "TWITTER_PROFILE_MAPPING", {
     'screen_name': 'username',
@@ -53,6 +54,9 @@ TWITTER_PROFILE_MAPPING = getattr(settings, "TWITTER_PROFILE_MAPPING", {
 FACEBOOK_AUTHORIZE_URL = getattr(settings, "FACEBOOK_AUTHORIZE_URL", "https://graph.facebook.com/oauth/authorize")
 FACEBOOK_ACCESS_TOKEN_URL = getattr(settings, "FACEBOOK_ACCESS_TOKEN_URL", "https://graph.facebook.com/oauth/access_token")
 FACEBOOK_API_URL = getattr(settings, "FACEBOOK_API_URL", "https://graph.facebook.com/me")
+FACEBOOK_PROFILE_MAPPING = getattr(settings, "FACEBOOK_PROFILE_MAPPING", {
+    'name': 'name',
+})
 
 YANDEX_AUTHORIZE_URL =  getattr(settings, "YANDEX_AUTHORIZE_URL", "https://oauth.yandex.ru/authorize")
 YANDEX_API_URL = getattr(settings, "YANDEX_API_URL", "https://api-yaru.yandex.ru/me")
