@@ -1,14 +1,11 @@
-from django.conf import settings
-
+from netauth import settings
 from netauth.backends import OAuthBaseBackend
-
 
 try:
     from hashlib import md5
 except ImportError:
     import md5
     md5 = md5.new
-
 
 class VkontakteBackend(OAuthBaseBackend):
 

@@ -1,7 +1,6 @@
 from xml.etree.ElementTree import fromstring
 
-from django.conf import settings
-
+from netauth import settings
 from netauth.backends import OAuthBaseBackend
 from netauth.exceptions import Redirect
 
