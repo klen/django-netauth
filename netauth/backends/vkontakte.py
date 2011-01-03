@@ -20,7 +20,8 @@ class VkontakteBackend(OAuthBaseBackend):
                 raise ValueError
         except ( KeyError, ValueError ):
             self.error(request)
-
+        request.session.extra['first_name'] = data.get('first_name', '')
+        request.session.extra['last_name'] = data.get('last_name', '')
         return content
 
     def get_extra_data(self, response):
