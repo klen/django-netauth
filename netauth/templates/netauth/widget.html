@@ -27,7 +27,7 @@
                         if (r.response) {
                             first_name = r.response[0].first_name
                             last_name = r.response[0].last_name
-                            document.location.href = "{% url netauth-complete 'vkontakte' %}?first_name=" + first_name + "&last_name=" + last_name;
+                            document.location.href = "{% url netauth-complete 'vkontakte' %}?next={{ request.GET.next }}&first_name=" + first_name + "&last_name=" + last_name;
                         }
                         else
                             document.location.href = "{% url netauth-complete 'vkontakte' %}"
