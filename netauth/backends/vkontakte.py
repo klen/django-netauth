@@ -25,6 +25,6 @@ class VkontakteBackend(OAuthBaseBackend):
 
     def get_extra_data(self, response):
         result = {}
-        for vk_field, field in settings.VKONTAKTE_PROFILE_MAPPING.values():
+        for vk_field, field in settings.VKONTAKTE_PROFILE_MAPPING.items():
             result[field] = self.data[vk_field]
         return result
