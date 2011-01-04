@@ -20,12 +20,11 @@ class VkontakteBackend(OAuthBaseBackend):
                 raise ValueError
         except ( KeyError, ValueError ):
             self.error(request)
-        self.first_name = data.get('first_name', '')
-        self.last_name = data.get('last_name', '')
+        self.data = data
         return content
 
     def get_extra_data(self, response):
         result = {}
-        result['first_name'] = self.first_name
-        result['last_name'] = self.last_name
+        for vk_field, field in settings.VKONTAKTE_PROFILE_MAPPING.values():
+            result[field] = self.data[vk_field]
         return result
