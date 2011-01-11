@@ -1,14 +1,11 @@
-from django.conf import settings
-
+from netauth import settings
 from netauth.backends import OAuthBaseBackend
-
 
 try:
     from hashlib import md5
 except ImportError:
     import md5
     md5 = md5.new
-
 
 class VkontakteBackend(OAuthBaseBackend):
 
@@ -23,8 +20,11 @@ class VkontakteBackend(OAuthBaseBackend):
                 raise ValueError
         except ( KeyError, ValueError ):
             self.error(request)
-
+        self.data = data
         return content
 
     def get_extra_data(self, response):
-        return response
+        result = {}
+        for vk_field, field in settings.VKONTAKTE_PROFILE_MAPPING.items():
+            result[field] = self.data[vk_field]
+        return result

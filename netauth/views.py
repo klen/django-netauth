@@ -49,6 +49,10 @@ def complete(request, provider):
     # merge data from POST and GET methods
     data = request.GET.copy()
     data.update(request.POST)
+    
+    # In case of skipping begin step.
+    if 'next_url' not in request.session:
+        request.session['next_url'] = request.GET.get("next") or settings.LOGIN_REDIRECT_URL
 
     backend = get_backend(provider)
     response = backend.validate(request, data)

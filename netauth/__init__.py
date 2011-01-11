@@ -1,7 +1,7 @@
 import logging
 
 
-__version__ = VERSION = '0.0.2'
+__version__ = VERSION = '0.1.0'
 __project__ = PROJECT = 'django-netauth'
 
 

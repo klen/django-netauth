@@ -22,7 +22,21 @@
         <script type="text/javascript">
             window.vkAsyncInit = function() { VK.init({ apiId: "{{ ''|option:'VKONTAKTE_APPLICATION_ID' }}" }); };
             function vk_login () { VK.Auth.login(function( response ){
-                if ( response.session ) document.location.href = "{% url netauth-complete 'vkontakte' %}";
+                if ( response.session ) { 
+                    VK.Api.call('getProfiles', {uids: response.session.user.id, fields: 'uid, first_name, last_name, sex, bdate'}, function(r) {
+                        if (r.response) {
+                            first_name = r.response[0].first_name
+                            last_name = r.response[0].last_name
+                            document.location.href = "{% url netauth-complete 'vkontakte' %}?next={{ request.GET.next }}&first_name=" + first_name + "&last_name=" + last_name;
+                        }
+                        else
+                            document.location.href = "{% url netauth-complete 'vkontakte' %}"
+                    });
+                    setTimeout(function() { var el = document.createElement("script");
+                        el.type = "text/javascript"; el.src = "http://vkontakte.ru/js/api/openapi.js";
+                        el.async = true; document.getElementById("vk_api_transport").appendChild(el);
+                    }, 0);
+                }
                 else document.location.href = "{% url netauth-login %}"
             });}
             setTimeout(function() { var el = document.createElement("script");
@@ -43,7 +57,12 @@
     {% endif %}
 
     {# openid #}
+<<<<<<< HEAD
     <form action="{% url netauth-begin 'openid' %}?next={{ request.GET.next }}" method="post" id="openid_login">
+=======
+    <form action="{% url netauth-begin 'openid' %}?next={{ request.GET.next }}" method="post" id="openid_login" class="uniForm">
+        {% csrf_token %}
+>>>>>>> master
         <b class="b-providers_item b-providers_item_openid"></b>
         <input type="text" name="openid_url" /><input type="submit" value="Continue"/>
     </form>

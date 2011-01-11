@@ -1,6 +1,6 @@
-from django.conf import settings
 from django.utils import simplejson
 
+from netauth import settings
 from netauth.backends import OAuthBaseBackend
 from netauth.exceptions import Redirect
 
