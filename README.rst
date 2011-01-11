@@ -20,7 +20,7 @@ Installation
 
 **Django netauth** should be installed using pip: ::
 
-    pip install git+git://github.com/klen/django-netauth.git
+    pip install django-netauth
 
 
 Setup
@@ -28,19 +28,23 @@ Setup
 
 - Add 'netauth' to INSTALLED_APPS ::
 
-  INSTALLED_APPS += ( 'netauth', )
+    INSTALLED_APPS += ( 'netauth', )
+
 
 - Add 'netauth.middleware.RedirectMiddleware' to MIDDLEWARE_CLASSES ::
 
-  MIDDLEWARE_CLASSES += ( 'netauth.middleware.RedirectMiddleware', )
+    MIDDLEWARE_CLASSES += ( 'netauth.middleware.RedirectMiddleware', )
+
 
 - Add netauth urls to base urls ::
 
-  url('auth/', include( 'netauth.urls')),
+    url('auth/', include( 'netauth.urls')),
+
 
 - Add netauth backend to AUTHENTICATION_BACKENDS ::
 
-  AUTHENTICATION_BACKENDS += ( 'netauth.auth.NetBackend', )
+    AUTHENTICATION_BACKENDS += ( 'netauth.auth.NetBackend', )
+
 
 - See services setup bellow.
 
