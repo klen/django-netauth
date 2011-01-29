@@ -1,0 +1,4 @@
+Make local tests
+Move google to oauth
+Check yandex openid
+Add livejournal

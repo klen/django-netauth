@@ -1,6 +1,6 @@
 {% load netauth_tags %}
 
-<link href="{{ STATIC_URL }}netauth/css/main.css" media="screen, projection" rel="stylesheet" type="text/css" />
+<link href="{{ MEDIA_URL }}netauth/css/main.css" media="screen, projection" rel="stylesheet" type="text/css" />
 
 <div class="b-providers">
 
@@ -57,12 +57,8 @@
     {% endif %}
 
     {# openid #}
-<<<<<<< HEAD
-    <form action="{% url netauth-begin 'openid' %}?next={{ request.GET.next }}" method="post" id="openid_login">
-=======
     <form action="{% url netauth-begin 'openid' %}?next={{ request.GET.next }}" method="post" id="openid_login" class="uniForm">
         {% csrf_token %}
->>>>>>> master
         <b class="b-providers_item b-providers_item_openid"></b>
         <input type="text" name="openid_url" /><input type="submit" value="Continue"/>
     </form>

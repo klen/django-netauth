@@ -1,1 +1,0 @@
-default django.db.backends.postgresql_psycopg2 netauth:netauth@localhost/netauth_master

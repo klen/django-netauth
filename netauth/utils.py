@@ -14,7 +14,6 @@ def parse_template(template_path, **kwargs):
         First line of template should contain the subject of email.
         Return tuple with subject and content.
     """
-
     template = get_template(template_path)
     context = Context(kwargs)
     data = template.render(context).strip()

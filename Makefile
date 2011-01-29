@@ -3,6 +3,7 @@ MODULE=django-netauth
 clean:
 	sudo rm -rf build dist django_netauth.egg-info
 	find . -name "*.pyc" -delete
+	find . -name "*.orig" -delete
 
 install: remove _install clean
 
@@ -21,3 +22,6 @@ _upload:
 
 _register:
 	python setup.py register
+
+test:
+	cd example_project && ./manage.py test main

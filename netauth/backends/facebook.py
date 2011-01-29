@@ -1,8 +1,7 @@
 from django.utils import simplejson
 
-from netauth import settings
+from netauth import settings, RedirectException
 from netauth.backends import OAuthBaseBackend
-from netauth.exceptions import Redirect
 
 
 class FacebookBackend(OAuthBaseBackend):
@@ -13,9 +12,9 @@ class FacebookBackend(OAuthBaseBackend):
     def begin( self, request, data ):
         request = self.get_request( url=self.AUTHORIZE_URL, parameters = {
             'client_id' : self.APPLICATION_ID,
-            'redirect_uri' : self.callback(request),
+            'redirect_uri' : self.get_callback(request),
         })
-        raise Redirect(request.to_url())
+        raise RedirectException(request.to_url())
 
     def validate(self, request, data):
 
@@ -24,7 +23,7 @@ class FacebookBackend(OAuthBaseBackend):
 
         request = self.get_request( url=self.ACCESS_TOKEN_URL, parameters = {
             'client_id' : self.APPLICATION_ID,
-            'redirect_uri' : self.callback(request),
+            'redirect_uri' : self.get_callback(request),
             'client_secret': self.APPLICATION_SECRET,
             'code': data['code'],
         })

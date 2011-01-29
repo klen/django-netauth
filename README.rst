@@ -31,11 +31,6 @@ Setup
     INSTALLED_APPS += ( 'netauth', )
 
 
-- Add 'netauth.middleware.RedirectMiddleware' to MIDDLEWARE_CLASSES ::
-
-    MIDDLEWARE_CLASSES += ( 'netauth.middleware.RedirectMiddleware', )
-
-
 - Add netauth urls to base urls ::
 
     url('auth/', include( 'netauth.urls')),

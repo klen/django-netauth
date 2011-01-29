@@ -1,3 +1,10 @@
+## 2011-01-28 0.1.1
+
+* Drop netauth middleware
+* More simple example project
+* More compatable with django 1.2
+
+
 ## 2010-12-13 0.1.0
 
 * Thanks for ilblackdragon for fixes

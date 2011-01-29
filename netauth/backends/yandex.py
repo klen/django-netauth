@@ -1,8 +1,7 @@
 from xml.etree.ElementTree import fromstring
 
-from netauth import settings
+from netauth import RedirectException, settings
 from netauth.backends import OAuthBaseBackend
-from netauth.exceptions import Redirect
 
 
 class YandexBackend( OAuthBaseBackend ):
@@ -11,7 +10,7 @@ class YandexBackend( OAuthBaseBackend ):
 
     def begin( self, request, data ):
         request = self.get_request( url= self.AUTHORIZE_URL , parameters = { 'client_id': self.APPLICATION_ID, 'response_type': 'token' })
-        raise Redirect(request.to_url())
+        raise RedirectException(request.to_url())
 
     def validate( self, request, data ):
         try:

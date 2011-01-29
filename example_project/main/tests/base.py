@@ -1,15 +1,11 @@
-from django.test.client import RequestFactory
-from django.utils import unittest
-from views import Index
+from django.test import Client, TestCase
 
 
-class BaseTestCase( unittest.TestCase ):
+class BaseTestCase(TestCase):
 
     def setUp( self ):
-        self.factory = RequestFactory()
+        self.client = Client()
 
-    def test_response(self):
-        request = self.factory.get('/')
-        view = Index.as_view()
-        response = view(request)
-        self.assertEquals(response.status_code, 200)
+    def test_index(self):
+        response = self.client.get('')
+        self.assertContains(response, 'hello')

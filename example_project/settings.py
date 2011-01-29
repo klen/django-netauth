@@ -1,27 +1,41 @@
-import os, logging
-from settings import PROJECT_ROOT, DEVZONE_ROOT, parse_db
+import os.path
 
+PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
+
+# NETAUTH_SETTINGS
+AUTHENTICATION_BACKENDS = ( 'django.contrib.auth.backends.ModelBackend', 'netauth.auth.NetBackend', )
+
+YANDEX_APPLICATION_ID = "51a38f59a8cf4e96b7635d33a5b37bfe"
+
+FACEBOOK_APPLICATION_ID = "124962940900708"
+FACEBOOK_APPLICATION_SECRET = "626e88ccb61ff09ed2416b9f0b93cf08"
+
+TWITTER_CONSUMER_KEY = "vD7tukEla4lJzBPr4BU4hw"
+TWITTER_CONSUMER_SECRET = "Uf5KDzDQ8pugSx7502i1GMlj19SAmdw64jFc7nKA"
+
+VKONTAKTE_APPLICATION_ID = "2045136"
+VKONTAKTE_APPLICATION_SECRET = "Fj9ROpKBcYSE2MkEr5zo"
+
+# Debug
+DEBUG = True
+TEMPLATE_DEBUG = True
 
 # Databases
-DATABASES = parse_db() or {
-        'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': 'db.sqlite',
-                'USER': '',
-                'PASSWORD': '',
-                'TEST_CHARSET': 'utf8',
-            }
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite',
+        'USER': '', 'PASSWORD': '',
+        'TEST_CHARSET': 'utf8',
+    }}
 
 # Base urls config
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'main.urls'
 
 # Media settigns
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static')
-STATIC_ROOT = os.path.join(DEVZONE_ROOT, 'static')
-MEDIA_URL = '/media/'
-STATIC_URL = '/static/'
-ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+MEDIA_URL = '/static/'
+ADMIN_MEDIA_PREFIX = MEDIA_ROOT + 'admin/'
 
 # Templates settings
 TEMPLATE_DIRS = ()
@@ -35,8 +49,8 @@ TEMPLATE_LOADERS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.core.context_processors.static',
     'django.core.context_processors.request',
+    'django.core.context_processors.media',
     'django.contrib.auth.context_processors.auth',
     'django.contrib.messages.context_processors.messages',
 )
@@ -48,7 +62,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.admin',
-    'django.contrib.staticfiles',
+    'main',
+    'netauth',
 )
 
 # Middleware
@@ -69,10 +84,3 @@ TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.i18n',)
 
 # Debug
 INTERNAL_IPS = ('127.0.0.1',)
-
-# Cache
-CACHE_PREFIX = "CORE"
-
-# Logging
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s', datefmt='%a, %d %b %Y %H:%M:%S')
-logging.info("Core settings loaded.")

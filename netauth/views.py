@@ -3,8 +3,17 @@ from django.http import Http404
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
-from netauth import settings, lang
+from netauth import RedirectException, settings, lang
 from netauth.utils import str_to_class, get_backend
+
+
+def redirect_decorator(func):
+    def __wrapper(request, *args, **kwargs):
+        try:
+            func(request, *args, **kwargs)
+        except RedirectException, e:
+            return redirect(*e.args, **e.kwargs)
+    return __wrapper
 
 
 def logout(request):
@@ -13,6 +22,7 @@ def logout(request):
     return redirect(settings.LOGOUT_URL)
 
 
+@redirect_decorator
 def begin(request, provider):
     """ Display authentication form. This is also the first step
         in registration. The actual login is in social_complete
@@ -31,6 +41,7 @@ def begin(request, provider):
     return backend.begin(request, data)
 
 
+@redirect_decorator
 def complete(request, provider):
     """ After first step of net authentication, we must validate the response.
         If everything is ok, we must do the following:
@@ -49,7 +60,7 @@ def complete(request, provider):
     # merge data from POST and GET methods
     data = request.GET.copy()
     data.update(request.POST)
-    
+
     # In case of skipping begin step.
     if 'next_url' not in request.session:
         request.session['next_url'] = request.GET.get("next") or settings.LOGIN_REDIRECT_URL
@@ -58,8 +69,9 @@ def complete(request, provider):
     response = backend.validate(request, data)
 
     if request.user.is_authenticated():
-        backend.login_user(request)
         backend.merge_accounts(request)
+        backend.login_user(request)
+
     else:
         backend.login_user(request)
         if not settings.REGISTRATION_ALLOWED:
@@ -97,4 +109,3 @@ def extra(request, provider):
         form = str_to_class(settings.EXTRA_FORM)(initial=initial)
 
     return render_to_response('netauth/extra.html', {'form': form }, context_instance=RequestContext(request))
-
