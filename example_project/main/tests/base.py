@@ -8,4 +8,4 @@ class BaseTestCase(TestCase):
 
     def test_index(self):
         response = self.client.get('')
-        self.assertContains(response, 'hello')
+        self.assertContains(response, 'login')
