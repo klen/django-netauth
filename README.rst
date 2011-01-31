@@ -12,7 +12,8 @@ Requirements
 
 - python >= 2.5
 - django >= 1.2
-- pip >= 0.8
+- python-openid
+- oauth2
 
 
 Installation
