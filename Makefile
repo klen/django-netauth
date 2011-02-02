@@ -7,21 +7,28 @@ clean:
 
 install: remove _install clean
 
+register: _register clean
+
 remove:
 	sudo pip uninstall $(MODULE)
+
+upload: _upload clean _commit
+
+test:
+	cd example_project && ./manage.py test main
 
 _install:
 	sudo pip install -U .
 
-register: _register clean
-
-upload: _upload clean
-
 _upload:
 	python setup.py sdist upload
 
+_commit:
+	git add .
+	git add . -u
+	git commit
+	git push origin
+	git push intaxi
+
 _register:
 	python setup.py register
-
-test:
-	cd example_project && ./manage.py test main
