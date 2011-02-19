@@ -72,7 +72,6 @@ class BaseBackend(object):
 
         # authenticate and redirect user.
         if user:
-            messages.add_message(request, messages.SUCCESS, lang.SUCCESSFULLY_AUTHENTICATED)
             auth.login(request, user)
 
             try:

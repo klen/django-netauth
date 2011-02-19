@@ -57,17 +57,27 @@ def complete(request, provider):
     backend = get_backend(provider)
     response = backend.validate(request, data)
 
+    max_age = 60 * 60 * 24 * 7 * 2
+    print('----- x1')
     if request.user.is_authenticated():
-        backend.login_user(request)
-        backend.merge_accounts(request)
+        success = backend.login_user(request)
+        if success:    
+            backend.merge_accounts(request)
     else:
-        backend.login_user(request)
-        if not settings.REGISTRATION_ALLOWED:
-            messages.warning(request, lang.REGISTRATION_DISABLED)
-            return redirect(settings.REGISTRATION_DISABLED_REDIRECT)
-
+        success = backend.login_user(request)
+        if not success and not settings.REGISTRATION_ALLOWED:
+                messages.warning(request, lang.REGISTRATION_DISABLED)
+                return redirect(settings.REGISTRATION_DISABLED_REDIRECT)
+    if success:
+        try:                                                                                                                                                                                                               
+            redirect_url = request.session['next_url']                                                                                                                                                                     
+            del request.session['next_url']                                                                                                                                                                                
+        except KeyError:                                                                                                                                                                                                   
+            redirect_url = settings.LOGIN_REDIRECT_URL 
+        resp = redirect(redirect_url)
+        resp.set_cookie('logined', 'true', max_age=max_age)
+        return resp
     return backend.complete(request, response)
-
 
 def extra(request, provider):
     """ Handle registration of new user with extra data for profile
