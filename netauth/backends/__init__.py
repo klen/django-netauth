@@ -79,7 +79,8 @@ class BaseBackend(object):
                 del request.session['next_url']
             except KeyError:
                 redirect_url = settings.LOGIN_REDIRECT_URL
-            raise Redirect(redirect_url)
+            return True
+        return False
 
     def fill_extra_fields(self, request, extra):
         """
