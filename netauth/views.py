@@ -57,8 +57,6 @@ def complete(request, provider):
     backend = get_backend(provider)
     response = backend.validate(request, data)
 
-    max_age = 60 * 60 * 24 * 7 * 2
-    print('----- x1')
     if request.user.is_authenticated():
         success = backend.login_user(request)
         if success:    
@@ -75,7 +73,7 @@ def complete(request, provider):
         except KeyError:                                                                                                                                                                                                   
             redirect_url = settings.LOGIN_REDIRECT_URL 
         resp = redirect(redirect_url)
-        resp.set_cookie('logined', 'true', max_age=max_age)
+        resp.set_cookie('logined', 'true', max_age=settings.LOGINED_COOKIE_MAX_AGE)
         return resp
     return backend.complete(request, response)
 
@@ -96,9 +94,14 @@ def extra(request, provider):
                 user = auth.authenticate(identity=identity, provider=provider)
                 if user:
                     auth.login(request, user)
-                    next_url = request.session['next_url']
-                    del request.session['next_url']
-                    return redirect(next_url)
+                    try:                                                                                                                                                                                                               
+                        next_url = request.session['next_url']
+                        del request.session['next_url']
+                    except:
+                        redirect_url = settings.LOGIN_REDIRECT_URL 
+                    response = redirect(next_url)
+                    response.set_cookie('logined', 'true', max_age=settings.LOGINED_COOKIE_MAX_AGE)
+                    return response
             else:
                 messages.warning(request, lang.ACTIVATION_REQUIRED_TEXT)
                 return redirect(settings.ACTIVATION_REDIRECT_URL)
