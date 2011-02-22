@@ -59,8 +59,7 @@ def complete(request, provider):
 
     if request.user.is_authenticated():
         success = backend.login_user(request)
-        if success:    
-            backend.merge_accounts(request)
+        backend.merge_accounts(request)
     else:
         success = backend.login_user(request)
         if not success and not settings.REGISTRATION_ALLOWED:
@@ -73,7 +72,7 @@ def complete(request, provider):
         except KeyError:                                                                                                                                                                                                   
             redirect_url = settings.LOGIN_REDIRECT_URL 
         resp = redirect(redirect_url)
-        resp.set_cookie('logined', 'true', max_age=settings.SESSION_MAX_AGE)
+        resp.set_cookie('logined', 'true', max_age=settings.LOGINED_COOKIE_MAX_AGE)
         return resp
     return backend.complete(request, response)
 
@@ -100,7 +99,7 @@ def extra(request, provider):
                     except:
                         redirect_url = settings.LOGIN_REDIRECT_URL 
                     response = redirect(next_url)
-                    response.set_cookie('logined', 'true', max_age=settings.SESSION_MAX_AGE)
+                    response.set_cookie('logined', 'true', max_age=settings.LOGINED_COOKIE_MAX_AGE)
                     return response
             else:
                 messages.warning(request, lang.ACTIVATION_REQUIRED_TEXT)
