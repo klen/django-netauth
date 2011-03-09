@@ -1,4 +1,4 @@
-Add help on setup apps
+Fix double merge users
 Make local tests
 Move google to oauth
 Check yandex openid
