@@ -1,4 +1,6 @@
+Add help on setup apps
 Make local tests
 Move google to oauth
 Check yandex openid
 Add livejournal
+Add orkut

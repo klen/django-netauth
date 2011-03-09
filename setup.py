@@ -2,7 +2,7 @@ import os
 
 from setuptools import setup, find_packages
 
-from netauth import VERSION, PROJECT
+from netauth import VERSION, PROJECT, LICENSE
 
 
 MODULE_NAME = 'netauth'
@@ -26,13 +26,14 @@ META_DATA = dict(
     version = VERSION,
     description = read('DESCRIPTION'),
     long_description = read('README.rst'),
-    license='GNU LGPL',
+    license=LICENSE,
 
     author = "Kirill Klenov",
     author_email = "horneds@gmail.com",
 
     url = "http://github.com/klen/django-netauth.git",
 
+    keywords= 'auth django social',
     packages = find_packages(),
     package_data = { '': PACKAGE_DATA, },
 

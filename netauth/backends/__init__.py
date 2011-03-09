@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from httplib2 import Http
 from oauth2 import Request
 
-from netauth import LOG, RedirectException, settings, lang
+from netauth import NETAUTH_LOG, RedirectException, settings, lang
 from netauth.models import NetID
 from netauth.utils import str_to_class
 
@@ -25,13 +25,19 @@ class BaseBackend(object):
         raise NotImplementedError
 
     def get_extra_data(self, response):
-        return dict()
+        raise NotImplementedError
 
     def complete(self, request, response):
         """ Complete net auth.
         """
-        data = self.fill_extra_fields(request, self.get_extra_data(response))
+        extra = self.get_extra_data(response)
+        data = dict(
+            (form_field, extra.get(value, '')) for form_field, value in self.PROFILE_MAPPING.items()
+        ) if extra else dict()
         request.session['extra'] = data
+
+        self.fill_extra_fields(request, data)
+
         request.session['identity'] = self.identity
         raise RedirectException('netauth-extra', self.provider)
 
@@ -79,7 +85,7 @@ class BaseBackend(object):
                 redirect_url = settings.LOGIN_REDIRECT_URL
             raise RedirectException(redirect_url)
 
-    def fill_extra_fields(self, request, extra):
+    def fill_extra_fields(self, request, data):
         """
         Try to fetch extra data from provider, if this data is enough
         to validate settings.EXTRA_FORM then call save method of form
@@ -92,13 +98,6 @@ class BaseBackend(object):
         Also we need to create a dictionary with remapped
         keys from profile mapping settings.
         """
-        data = {}
-        if extra:
-            for backend_field, form_field in self.PROFILE_MAPPING.items():
-                data.update(self.extract_data(extra, backend_field, form_field))
-
-        LOG.info(data)
-
         form = str_to_class(settings.EXTRA_FORM)(data)
         if form.is_valid():
             form.save(request, self.identity, self.provider)
@@ -106,14 +105,6 @@ class BaseBackend(object):
 
         else:
             return data
-
-    def extract_data(self, extra, backend_field, form_field):
-        """
-        If extra isnt standart python dictionary
-        you need to implement this method to retrive
-        values from this object.
-        """
-        return {form_field: extra.get(backend_field, '')}
 
     def error(self, request):
         messages.error(request, getattr( lang, '%s_INVALID_RESPONSE' % self.provider.upper()))
@@ -136,9 +127,10 @@ class OAuthBaseBackend( BaseBackend ):
 
     def load_request( self, request ):
         response, content = self.client.request(request.to_url())
-        LOG.info(content)
+        NETAUTH_LOG.info(content)
+
         if response[ 'status' ] != '200':
-            LOG.info(request.to_url())
+            NETAUTH_LOG.info(request.to_url())
             raise RedirectException('netauth-login')
 
         return content

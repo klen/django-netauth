@@ -28,17 +28,12 @@ def begin(request, provider):
         in registration. The actual login is in social_complete
         function below.
     """
-    # merge data from POST and GET methods
-    data = request.GET.copy()
-    data.update(request.POST)
-
     # store url to where user will be redirected
-    # after successfull authentication.
     request.session['next_url'] = request.GET.get("next") or settings.LOGIN_REDIRECT_URL
 
     # start the authentication process
     backend = get_backend(provider)
-    return backend.begin(request, data)
+    return backend.begin(request, dict(request.REQUEST.items()))
 
 
 @redirect_decorator

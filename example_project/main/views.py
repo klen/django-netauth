@@ -1,8 +1,8 @@
-from django.http import HttpResponse
+from django.views.generic.simple import direct_to_template
 
 
 def index(request):
-    return HttpResponse('<a href="/auth/login/">login</a>')
+    return direct_to_template(request, 'base.html')
 
 def profile(request):
-    return HttpResponse('Profile for %s. <a href="/logout/">logout</a>' % request.user.username)
+    return direct_to_template(request, 'profile.html')

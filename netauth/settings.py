@@ -52,7 +52,7 @@ TWITTER_ACCESS_TOKEN_URL = getattr(settings, "TWITTER_ACCESS_TOKEN_URL", "http:/
 TWITTER_AUTHORIZE_URL = getattr(settings, "TWITTER_AUTHORIZE_URL", "http://twitter.com/oauth/authorize")
 TWITTER_API_URL = getattr(settings, "TWITTER_API_URL", "http://api.twitter.com/1/users/show.json?user_id=%s")
 TWITTER_PROFILE_MAPPING = getattr(settings, "TWITTER_PROFILE_MAPPING", {
-    'screen_name': 'username',
+    'username': 'screen_name',
 })
 
 FACEBOOK_APPLICATION_ID = getattr(settings, "FACEBOOK_APPLICATION_ID", None)
@@ -61,17 +61,18 @@ FACEBOOK_AUTHORIZE_URL = getattr(settings, "FACEBOOK_AUTHORIZE_URL", "https://gr
 FACEBOOK_ACCESS_TOKEN_URL = getattr(settings, "FACEBOOK_ACCESS_TOKEN_URL", "https://graph.facebook.com/oauth/access_token")
 FACEBOOK_API_URL = getattr(settings, "FACEBOOK_API_URL", "https://graph.facebook.com/me")
 FACEBOOK_PROFILE_MAPPING = getattr(settings, "FACEBOOK_PROFILE_MAPPING", {
-    'name': 'name',
+    'username': 'last_name',
 })
 
 YANDEX_APPLICATION_ID = getattr(settings, "YANDEX_APPLICATION_ID", None)
 YANDEX_AUTHORIZE_URL =  getattr(settings, "YANDEX_AUTHORIZE_URL", "https://oauth.yandex.ru/authorize")
 YANDEX_API_URL = getattr(settings, "YANDEX_API_URL", "https://api-yaru.yandex.ru/me")
 YANDEX_PROFILE_MAPPING = getattr(settings, "YANDEX_PROFILE_MAPPING", {
-    'name': 'username',
+    'username': 'name',
 })
 
 VKONTAKTE_APPLICATION_ID = getattr(settings, "VKONTAKTE_APPLICATION_ID", None)
 VKONTAKTE_APPLICATION_SECRET = getattr(settings, "VKONTAKTE_APPLICATION_SECRET", None)
 VKONTAKTE_PROFILE_MAPPING = getattr(settings, "VKONTAKTE_PROFILE_MAPPING", {
+    'username': 'last_name',
 })

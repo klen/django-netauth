@@ -1,25 +1,8 @@
 import os.path
+import logging
 
-PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
+PROJECT_ROOT = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
 DEVZONE_ROOT = os.path.dirname(PROJECT_ROOT)
-
-# NETAUTH_SETTINGS
-AUTHENTICATION_BACKENDS = ( 'django.contrib.auth.backends.ModelBackend', 'netauth.auth.NetBackend', )
-
-YANDEX_APPLICATION_ID = "51a38f59a8cf4e96b7635d33a5b37bfe"
-
-FACEBOOK_APPLICATION_ID = "124962940900708"
-FACEBOOK_APPLICATION_SECRET = "626e88ccb61ff09ed2416b9f0b93cf08"
-
-TWITTER_CONSUMER_KEY = "vD7tukEla4lJzBPr4BU4hw"
-TWITTER_CONSUMER_SECRET = "Uf5KDzDQ8pugSx7502i1GMlj19SAmdw64jFc7nKA"
-
-VKONTAKTE_APPLICATION_ID = "2045136"
-VKONTAKTE_APPLICATION_SECRET = "Fj9ROpKBcYSE2MkEr5zo"
-
-# Debug
-DEBUG = True
-TEMPLATE_DEBUG = True
 
 # Databases
 DATABASES = {
@@ -39,6 +22,7 @@ STATIC_ROOT = os.path.join(DEVZONE_ROOT, 'static')
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+LOGOUT_URL = "/"
 
 # Templates settings
 TEMPLATE_DIRS = ()
@@ -66,8 +50,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.staticfiles',
-    'main',
-    'netauth',
 )
 
 # Middleware
@@ -86,5 +68,7 @@ USE_I18N = True
 MIDDLEWARE_CLASSES += ('django.middleware.locale.LocaleMiddleware',)
 TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.i18n',)
 
-# Debug
-INTERNAL_IPS = ('127.0.0.1',)
+# Logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s', datefmt='%a, %d %b %Y %H:%M:%S')
+logging.info("Core settings loaded.")
+

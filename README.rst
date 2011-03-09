@@ -1,14 +1,12 @@
-..   -*- mode: rst -*-
-
 django-netauth
 ##############
 
-**Django netauth** is django application that allows authenticate users through OpenID/OAuth/Facebook/Vkontakte.
+**Django netauth** is django application that allows authenticate users through OpenID/OAuth/Google/Twitter/Facebook/Vkontakte.
 
 .. contents::
 
 Requirements
--------------
+=============
 
 - python >= 2.5
 - django >= 1.2
@@ -17,7 +15,7 @@ Requirements
 
 
 Installation
-------------
+=============
 
 **Django netauth** should be installed using pip: ::
 
@@ -25,7 +23,7 @@ Installation
 
 
 Setup
-------
+======
 
 - Add 'netauth' to INSTALLED_APPS ::
 
@@ -44,11 +42,9 @@ Setup
 
 - See services setup bellow.
 
-- See services setup bellow.
-
 
 Use netauth
-------------
+============
 
 1) Use url '/auth/login' as login point in your site
 2) Use template tag 'netauth_widget'
@@ -56,14 +52,14 @@ Use netauth
 
 
 Extra fields
--------------
+=============
 In order to fill extra fields that may be required by your user profile, you need to setup couple of variables in settings.py of your project.
 
 The name of variable should be uppercased name of backend + "_PROFILE_MAPPING". For example: GOOGLE_PROFILE_MAPPING, TWITTER_PROFILE_MAPPING, etc..
 
 The value of this variable must be dictionary with name of the field on the provider side and its value must be name of your form field. For example:
 
-TWITTER_PROFILE_MAPPING = { 'screen_name': 'username', }
+TWITTER_PROFILE_MAPPING = { 'username': 'screen_name', }
 
 Here you can see that 'screen_name' is what you asking from twitter, in your EXTRA_FORM you will see the value of this under key 'username'. This is because every authentication method can provide different names for its data and you need to unify it.
 
@@ -102,10 +98,39 @@ Vkontakte
 - Add VKONTAKTE_APPLICATION_ID and VKONTAKTE_APPLICATION_SECRET in your settings file
 
 
+Changes
+=======
+
+Make sure you`ve read the following document if you are upgrading from previous versions of scss:
+
+http://packages.python.org/django-netauth/changes.html
+
+
 Note
------
+=====
 
 You need to setup messages-framework_ as described in django documentation
 
 
+Bug tracker
+===========
+
+If you have any suggestions, bug reports or
+annoyances please report them to the issue tracker
+at https://github.com/klen/django-netauth/issues
+
+
+Contributing
+============
+
+Development of django-netauth happens at github: https://github.com/klen/django-netauth
+
+
+License
+=======
+
+Licensed under a `GNU lesser general public license`_.
+
+
+.. _GNU lesser general public license: http://www.gnu.org/copyleft/lesser.html
 .. _messages-framework: http://docs.djangoproject.com/en/dev/ref/contrib/messages/#ref-contrib-messages
