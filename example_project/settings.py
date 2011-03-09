@@ -1,6 +1,7 @@
 import os.path
 
 PROJECT_ROOT = os.path.realpath(os.path.dirname(__file__))
+DEVZONE_ROOT = os.path.dirname(PROJECT_ROOT)
 
 # NETAUTH_SETTINGS
 AUTHENTICATION_BACKENDS = ( 'django.contrib.auth.backends.ModelBackend', 'netauth.auth.NetBackend', )
@@ -34,8 +35,10 @@ ROOT_URLCONF = 'main.urls'
 
 # Media settigns
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static')
-MEDIA_URL = '/static/'
-ADMIN_MEDIA_PREFIX = MEDIA_ROOT + 'admin/'
+STATIC_ROOT = os.path.join(DEVZONE_ROOT, 'static')
+MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
 
 # Templates settings
 TEMPLATE_DIRS = ()
@@ -49,8 +52,8 @@ TEMPLATE_LOADERS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.core.context_processors.static',
     'django.core.context_processors.request',
-    'django.core.context_processors.media',
     'django.contrib.auth.context_processors.auth',
     'django.contrib.messages.context_processors.messages',
 )
@@ -62,6 +65,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.admin',
+    'django.contrib.staticfiles',
     'main',
     'netauth',
 )
