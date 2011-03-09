@@ -2,6 +2,7 @@ django-netauth
 ##############
 
 **Django netauth** is django application that allows authenticate users through OpenID/OAuth/Google/Twitter/Facebook/Vkontakte.
+Example project deployed on http://netauth.node42.org/
 
 .. contents::
 
@@ -71,21 +72,24 @@ Facebook
 
 - Go to http://www.facebook.com/developers/createapp.php and create application
 
-- Set FACEBOOK_APPLICATION_ID and FACEBOOK_APPLICATION_SECRET in your settings file
+- Set FACEBOOK_APPLICATION_ID and **FACEBOOK_APPLICATION_SECRET** (not key) in your settings file
 
 
 Twitter
 --------
 
 - Go to http://twitter.com/apps/new and create application
+  Application type: ``Browser``
+  Callback URL: ``http://your_domain/auth/complete/``
 
-- Set TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET and TWITTER_REQUEST_TOKEN_URL in your settings file
+- Set TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET in your settings file
 
 
 Yandex
 -------
 
 - Go to http://oauth.yandex.ru/client/new and create application
+  Callback URL: ``http://your_domain/auth/ya_proxy/``
 
 - Add YANDEX_APPLICATION_ID in your settings file
 

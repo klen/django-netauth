@@ -1,12 +1,13 @@
 CHANGES
 =======
 
-## 2011-03-09 0.1.5
+## 2011-03-09 0.1.6
 -------------------
 * Fix facebook and yandex backends
 * Move example_project on makesite deploy
 * Change profile mapping order
 * Create docs
+* Add example site
 
 ## 2011-02-02 0.1.4
 -------------------
