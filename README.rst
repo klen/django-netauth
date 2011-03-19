@@ -40,6 +40,9 @@ Setup
 
     AUTHENTICATION_BACKENDS += ( 'netauth.auth.NetBackend', )
 
+- Syncronize database with django syncdb command ::
+
+    ./manage.py syncdb
 
 - See services setup bellow.
 

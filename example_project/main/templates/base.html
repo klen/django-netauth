@@ -25,9 +25,9 @@
             </div>
             <div class="z-grid_column z-grid-4">
                 <p>Hello {% firstof request.user.username request.user %}</p>
-                {% if request.user.is_anonymous %}
-                    <a href="{% url netauth-login %}">Login</a>
-                {% else %}
+                <a href="{% url netauth-login %}">Login</a>
+                {% if not request.user.is_anonymous %}
+                    <br/>
                     <a href="{% url netauth-logout %}">Logout</a>
                 {% endif %}
             </div>
