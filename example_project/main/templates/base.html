@@ -1,6 +1,36 @@
-{% extends "main/layout.html" %}
-
-{# Use for other applications #}
-{% block layout_content %}
-    {% block content %}{% endblock content %}
-{% endblock layout_content %}
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title>netauth example</title>
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/_main.css" />
+    </head> 
+    <body>
+        <div class="z-grid_row">
+            <div class="z-grid_column z-grid-12">
+                <h1><a href="/">django-netauth project example</a></h1>
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="z-grid_row">
+            <div class="z-grid_column z-grid-8">
+                <div class="content">
+                    {% block content %}{% endblock content %}
+                </div>
+            </div>
+            <div class="z-grid_column z-grid-4">
+                <p>Hello {% firstof request.user.username request.user %}</p>
+                <a href="{% url netauth-login %}">Login</a>
+                {% if not request.user.is_anonymous %}
+                    <br/>
+                    <a href="{% url netauth-logout %}">Logout</a>
+                {% endif %}
+            </div>
+        </div>
+    </body>
+</html>

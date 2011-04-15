@@ -5,3 +5,4 @@ sitegen.egg-info
 .sass-cache
 *.pyc
 *.orig
+docs/_*

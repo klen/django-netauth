@@ -1,8 +1,7 @@
 from xml.etree.ElementTree import fromstring
 
-from netauth import settings
+from netauth import RedirectException, settings
 from netauth.backends import OAuthBaseBackend
-from netauth.exceptions import Redirect
 
 
 class YandexBackend( OAuthBaseBackend ):
@@ -11,22 +10,23 @@ class YandexBackend( OAuthBaseBackend ):
 
     def begin( self, request, data ):
         request = self.get_request( url= self.AUTHORIZE_URL , parameters = { 'client_id': self.APPLICATION_ID, 'response_type': 'token' })
-        raise Redirect(request.to_url())
+        raise RedirectException(request.to_url())
 
     def validate( self, request, data ):
         try:
-            self.identity = data['access_token']
+            access_token = data['access_token']
+            request = self.get_request(url=self.API_URL, parameters = { 'oauth_token': access_token })
+            content = self.load_request(request)
+            xml = fromstring(content)
+            extra = dict(
+                (name, xml.find("{http://api.yandex.ru/yaru/}%s" % name).text)
+                for name in ['id', 'name', 'email', 'city', 'country', 'sex', 'mobile_phone', 'metro']
+            )
+            self.identity = extra['id']
         except KeyError:
             self.error(request)
-        request = self.get_request(url=self.API_URL, parameters = { 'oauth_token': self.identity })
-        return self.load_request(request)
+
+        return extra
 
     def get_extra_data(self, response):
-        tree = fromstring(response)
-        namespace = '{http://api.yandex.ru/yaru/}'
-        fields = ['name', 'email', 'city', 'country', 'sex', 'mobile_phone', 'metro']
-        result = dict()
-        for name in fields:
-            value = tree.find( "%s%s" % ( namespace, name ))
-            result[ name ] = value.text
-        return result
+        return response

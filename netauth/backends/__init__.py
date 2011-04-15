@@ -5,8 +5,7 @@ from django.core.urlresolvers import reverse
 from httplib2 import Http
 from oauth2 import Request
 
-from netauth import log, settings, lang
-from netauth.exceptions import Redirect
+from netauth import NETAUTH_LOG, RedirectException, settings, lang
 from netauth.models import NetID
 from netauth.utils import str_to_class
 
@@ -26,15 +25,21 @@ class BaseBackend(object):
         raise NotImplementedError
 
     def get_extra_data(self, response):
-        return dict()
+        raise NotImplementedError
 
     def complete(self, request, response):
         """ Complete net auth.
         """
-        data = self.fill_extra_fields(request, self.get_extra_data(response))
+        extra = self.get_extra_data(response)
+        data = dict(
+            (form_field, extra.get(value, '')) for form_field, value in self.PROFILE_MAPPING.items()
+        ) if extra else dict()
         request.session['extra'] = data
+
+        self.fill_extra_fields(request, data)
+
         request.session['identity'] = self.identity
-        raise Redirect('netauth-extra', self.provider)
+        raise RedirectException('netauth-extra', self.provider)
 
     def merge_accounts(self, request):
         """
@@ -56,8 +61,6 @@ class BaseBackend(object):
 
         # show nice message to user.
         messages.add_message(request, messages.SUCCESS, lang.ACCOUNTS_MERGED)
-        # redirect user.
-        raise Redirect(settings.LOGIN_REDIRECT_URL)
 
     def login_user(self, request):
         """
@@ -68,7 +71,7 @@ class BaseBackend(object):
         user = auth.authenticate(identity=self.identity, provider=self.provider)
         if user and settings.ACTIVATION_REQUIRED and not user.is_active:
             messages.add_message(request, messages.ERROR, lang.NOT_ACTIVATED)
-            raise Redirect(settings.ACTIVATION_REDIRECT_URL)
+            raise RedirectException(settings.ACTIVATION_REDIRECT_URL)
 
         # authenticate and redirect user.
         if user:
@@ -79,10 +82,14 @@ class BaseBackend(object):
                 del request.session['next_url']
             except KeyError:
                 redirect_url = settings.LOGIN_REDIRECT_URL
+<<<<<<< HEAD
             return True
         return False
+=======
+            raise RedirectException(redirect_url)
+>>>>>>> 9f960a68e3136e3e235022792c979e4309fe785b
 
-    def fill_extra_fields(self, request, extra):
+    def fill_extra_fields(self, request, data):
         """
         Try to fetch extra data from provider, if this data is enough
         to validate settings.EXTRA_FORM then call save method of form
@@ -95,31 +102,17 @@ class BaseBackend(object):
         Also we need to create a dictionary with remapped
         keys from profile mapping settings.
         """
-        data = {}
-        if extra:
-            for backend_field, form_field in self.PROFILE_MAPPING.items():
-                data.update(self.extract_data(extra, backend_field, form_field))
-
-        log.info(data)
-
         form = str_to_class(settings.EXTRA_FORM)(data)
         if form.is_valid():
             form.save(request, self.identity, self.provider)
             self.login_user(request)
+
         else:
             return data
 
-    def extract_data(self, extra, backend_field, form_field):
-        """
-        If extra isnt standart python dictionary
-        you need to implement this method to retrive
-        values from this object.
-        """
-        return {form_field: extra.get(backend_field, '')}
-
     def error(self, request):
         messages.error(request, getattr( lang, '%s_INVALID_RESPONSE' % self.provider.upper()))
-        raise Redirect('netauth-login')
+        raise RedirectException('netauth-login')
 
 
 class OAuthBaseBackend( BaseBackend ):
@@ -133,15 +126,16 @@ class OAuthBaseBackend( BaseBackend ):
         self.client = Http()
         super( OAuthBaseBackend, self ).__init__( *args, **kwargs )
 
-    def callback( self, request ):
+    def get_callback( self, request ):
         return request.build_absolute_uri(reverse('netauth-complete', args=[self.provider]))
 
     def load_request( self, request ):
         response, content = self.client.request(request.to_url())
-        log.info(content)
+        NETAUTH_LOG.info(content)
+
         if response[ 'status' ] != '200':
-            log.info(request.to_url())
-            raise Redirect('netauth-login')
+            NETAUTH_LOG.info(request.to_url())
+            raise RedirectException('netauth-login')
 
         return content
 

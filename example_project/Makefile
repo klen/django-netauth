@@ -4,31 +4,36 @@ SOURCE_DIR=../source
 SERVICE_DIR=../service
 
 run:
+	# Run local django dev server
 	./manage.py runserver --settings=settings.$(SETTINGS)
 
 shell:
+	# Run django project shell
 	./manage.py shell --settings=settings.$(SETTINGS)
 
 test:
-	./manage.py test tests --settings=settings.project
+	# Test project
+	./manage.py test main --settings=settings.test
 
 clean:
+	# Clean project
 	find . -name "*.pyc" -delete
 	find . -name "*.orig" -delete
-	sudo rm -rf .sass-cache
+
+clean_static:
+	sudo rm -rf $(STATIC_DIR)/*.js
+	sudo rm -rf $(STATIC_DIR)/*.css
+	sudo rm -rf $(STATIC_DIR)/*/
 
 update: static ve_update restart chown
 
-static: chown compass collect zeta
+static: chown collect zeta
 
 restart:
-	sudo sh $(SERVICE_DIR)/restart_update.sh
+	sudo sh $(SERVICE_DIR)/supervisor_update.sh
 
 ve_update:
 	sudo sh $(SERVICE_DIR)/virtualenv_update.sh
-
-compass:
-	sh $(SERVICE_DIR)/compass_install_update.sh
 
 chown:
 	sudo chown -R $(USER):$(USER) $(STATIC_DIR)
@@ -37,6 +42,9 @@ chown:
 collect:
 	./manage.py collectstatic --noinput --settings=settings.$(SETTINGS)
 
+doc:
+	sphinx-build docs docs/_build
+
 zeta:
-	zeta $(STATIC_DIR)/main.js
-	zeta $(STATIC_DIR)/main.css
+	zeta $(STATIC_DIR)
+

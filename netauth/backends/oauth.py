@@ -1,10 +1,9 @@
 from django.conf import settings as global_settings
 from django.utils import simplejson
-from django.utils.datastructures import MultiValueDictKeyError
 from oauth2 import Consumer, Token, Request, SignatureMethod_HMAC_SHA1
 
+from netauth import RedirectException
 from netauth.backends import OAuthBaseBackend
-from netauth.exceptions import Redirect
 
 
 class OAuthBackend(OAuthBaseBackend):
@@ -21,19 +20,20 @@ class OAuthBackend(OAuthBaseBackend):
         """ Try to get Request Token from OAuth Provider and
             redirect user to provider's site for approval.
         """
-        request = self.get_request( http_url=self.REQUEST_TOKEN_URL,
-                parameters = {'oauth_callback':self.callback( request )})
+        request = self.get_request(
+                http_url = self.REQUEST_TOKEN_URL,
+                parameters = dict(oauth_callback = self.get_callback(request)))
         content = self.load_request(request)
-        request = self.get_request( token = Token.from_string(content), http_url=self.AUTHORIZE_URL,)
-        raise Redirect(request.to_url())
+        request = self.get_request(token = Token.from_string(content), http_url=self.AUTHORIZE_URL)
+        raise RedirectException(request.to_url())
 
     def validate(self, request, data):
         try:
             parameters = dict(oauth_token = data['oauth_token'], oauth_verifier = data.get('oauth_verifier', None))
-        except MultiValueDictKeyError:
+        except KeyError:
             self.error(request)
 
-        request = self.get_request( http_url=self.ACCESS_TOKEN_URL, parameters=parameters)
+        request = self.get_request(http_url=self.ACCESS_TOKEN_URL, parameters=parameters)
         content = self.load_request(request)
         self.identity = self.parse_qs(content)['oauth_token'][0]
         return content
@@ -49,4 +49,3 @@ class OAuthBackend(OAuthBaseBackend):
                     http_url=http_url, parameters=parameters)
         request.sign_request(self.signature_method, self.consumer, token)
         return request
-

@@ -1,13 +1,23 @@
 {% load netauth_tags %}
 
-<link href="{{ STATIC_URL }}netauth/css/main.css" media="screen, projection" rel="stylesheet" type="text/css" />
+<link href="{% firstof MEDIA_URL STATIC_URL %}netauth/css/main.css" media="screen, projection" rel="stylesheet" type="text/css" />
 
 <div class="b-providers">
 
-    {# google #}
+    {# TWITTER #}
+    {% if ''|option:"TWITTER_CONSUMER_KEY" %}
+        <a class="b-providers_item b-providers_item_twitter" alt="Twitter" href="{% url netauth-begin 'twitter' %}?next={{ request.GET.next }}"></a>
+    {% endif %}
+
+    {# FACEBOOK #}
+    {% if ''|option:"FACEBOOK_APPLICATION_ID" %}
+        <a class="b-providers_item b-providers_item_facebook" alt="Facebook" href="{% url netauth-begin 'facebook' %}?next={{ request.GET.next }}"></a>
+    {% endif %}
+
+    {# GOOGLE #}
     <a class="b-providers_item b-providers_item_google" alt="Google" href="{% url netauth-begin 'google' %}?openid_url=https://www.google.com/accounts/o8/id&next={{ request.GET.next }}"></a>
 
-    {# yandex #}
+    {# YANDEX #}
     {% if ''|option:"YANDEX_APPLICATION_ID" %}
         <a class="b-providers_item b-providers_item_yandex" alt="Yandex" href="{% url netauth-begin 'yandex' %}?next={{ request.GET.next }}"></a>
     {% endif %}
@@ -44,16 +54,6 @@
                 el.async = true; document.getElementById("vk_api_transport").appendChild(el);
             }, 0);
         </script>
-    {% endif %}
-
-    {# twitter #}
-    {% if ''|option:"TWITTER_CONSUMER_KEY" %}
-        <a class="b-providers_item b-providers_item_twitter" alt="Twitter" href="{% url netauth-begin 'twitter' %}?next={{ request.GET.next }}"></a>
-    {% endif %}
-
-    {# facebook #}
-    {% if ''|option:"FACEBOOK_APPLICATION_ID" %}
-        <a class="b-providers_item b-providers_item_facebook" alt="Facebook" href="{% url netauth-begin 'facebook' %}?next={{ request.GET.next }}"></a>
     {% endif %}
 
     {# openid #}

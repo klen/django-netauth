@@ -1,20 +1,20 @@
-import os, logging
-from settings import PROJECT_ROOT, DEVZONE_ROOT, parse_db
+import os.path
+import logging
 
+PROJECT_ROOT = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
+DEVZONE_ROOT = os.path.dirname(PROJECT_ROOT)
 
 # Databases
-DATABASES = parse_db() or {
-        'default': {
-                'ENGINE': 'django.db.backends.sqlite3',
-                'NAME': 'db.sqlite',
-                'USER': '',
-                'PASSWORD': '',
-                'TEST_CHARSET': 'utf8',
-            }
-        }
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite',
+        'USER': '', 'PASSWORD': '',
+        'TEST_CHARSET': 'utf8',
+    }}
 
 # Base urls config
-ROOT_URLCONF = 'urls'
+ROOT_URLCONF = 'main.urls'
 
 # Media settigns
 MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'static')
@@ -22,6 +22,7 @@ STATIC_ROOT = os.path.join(DEVZONE_ROOT, 'static')
 MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+LOGOUT_URL = "/"
 
 # Templates settings
 TEMPLATE_DIRS = ()
@@ -67,12 +68,7 @@ USE_I18N = True
 MIDDLEWARE_CLASSES += ('django.middleware.locale.LocaleMiddleware',)
 TEMPLATE_CONTEXT_PROCESSORS += ('django.core.context_processors.i18n',)
 
-# Debug
-INTERNAL_IPS = ('127.0.0.1',)
-
-# Cache
-CACHE_PREFIX = "CORE"
-
 # Logging
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s', datefmt='%a, %d %b %Y %H:%M:%S')
 logging.info("Core settings loaded.")
+

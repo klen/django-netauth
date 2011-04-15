@@ -1,14 +1,13 @@
 from django.core.urlresolvers import reverse
-from django.test import TestCase
+from django.test import TestCase, Client
 
-from main.tests.client import TestClient
 from netauth import settings
 
 
 class NetauthTestCase( TestCase ):
 
     def setUp( self ):
-        self.client = TestClient()
+        self.client = Client()
 
     def test_login(self):
         url = reverse("netauth-login")

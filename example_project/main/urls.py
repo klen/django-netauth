@@ -1,9 +1,9 @@
 from django.conf.urls.defaults import url, patterns, include
+from django.conf import settings
 from django.contrib import admin
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.defaults import page_not_found, server_error
 
-import views as rootviews
+import main.views as mainviews
 
 
 # 404 and 500 handlers
@@ -12,7 +12,8 @@ handler500 = server_error
 
 # Project urls
 urlpatterns = patterns( '',
-    url('^$', rootviews.Index.as_view(), name='index'),
+    url('^$', mainviews.index, name='index'),
+    url('^accounts/profile/$', mainviews.profile, name='profile'),
     url('^logout/$', 'django.contrib.auth.views.logout', name='logout'),
 
     # Net auth
@@ -23,5 +24,7 @@ urlpatterns = patterns( '',
 admin.autodiscover()
 urlpatterns += [ url(r'^admin/', include(admin.site.urls)), ]
 
-# Debug static files serve
-urlpatterns += staticfiles_urlpatterns()
+# Serve static in dev mode
+urlpatterns += url(r'^static/(?P<path>.*)$', 'django.views.static.serve',
+        {'document_root': settings.MEDIA_ROOT}),
+

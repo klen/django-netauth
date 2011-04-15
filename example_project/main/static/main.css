@@ -1,1 +1,5 @@
-@import url(main/css/screen.css);
+@import url(zeta://zeta.css);
+
+.content {
+    margin: 1em 0;
+}

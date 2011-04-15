@@ -1,0 +1,6 @@
+Fix double merge users
+Make local tests
+Move google to oauth
+Check yandex openid
+Add livejournal
+Add orkut

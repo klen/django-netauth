@@ -1,6 +1,7 @@
 from netauth import settings
 from netauth.backends import OAuthBaseBackend
 
+
 try:
     from hashlib import md5
 except ImportError:
@@ -20,11 +21,8 @@ class VkontakteBackend(OAuthBaseBackend):
                 raise ValueError
         except ( KeyError, ValueError ):
             self.error(request)
-        self.data = data
-        return content
+
+        return data
 
     def get_extra_data(self, response):
-        result = {}
-        for vk_field, field in settings.VKONTAKTE_PROFILE_MAPPING.items():
-            result[field] = self.data[vk_field]
-        return result
+        return dict(response.items())
