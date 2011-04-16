@@ -1,16 +1,18 @@
 from xml.etree.ElementTree import fromstring
 
-from netauth import RedirectException, settings
+from django.shortcuts import redirect
+
+from netauth import settings
 from netauth.backends import OAuthBaseBackend
 
 
-class YandexBackend( OAuthBaseBackend ):
+class YandexBackend(OAuthBaseBackend):
 
     APPLICATION_ID = property(lambda self: getattr(settings, "%s_APPLICATION_ID" % self.provider.upper()))
 
     def begin( self, request, data ):
         request = self.get_request( url= self.AUTHORIZE_URL , parameters = { 'client_id': self.APPLICATION_ID, 'response_type': 'token' })
-        raise RedirectException(request.to_url())
+        return redirect(request.to_url())
 
     def validate( self, request, data ):
         try:

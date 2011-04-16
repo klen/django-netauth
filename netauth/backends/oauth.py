@@ -1,8 +1,8 @@
 from django.conf import settings as global_settings
+from django.shortcuts import redirect
 from django.utils import simplejson
 from oauth2 import Consumer, Token, Request, SignatureMethod_HMAC_SHA1
 
-from netauth import RedirectException
 from netauth.backends import OAuthBaseBackend
 
 
@@ -24,8 +24,10 @@ class OAuthBackend(OAuthBaseBackend):
                 http_url = self.REQUEST_TOKEN_URL,
                 parameters = dict(oauth_callback = self.get_callback(request)))
         content = self.load_request(request)
+        if not content:
+            return redirect('netauth-login')
         request = self.get_request(token = Token.from_string(content), http_url=self.AUTHORIZE_URL)
-        raise RedirectException(request.to_url())
+        return redirect(request.to_url())
 
     def validate(self, request, data):
         try:

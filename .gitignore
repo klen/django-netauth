@@ -6,3 +6,4 @@ sitegen.egg-info
 *.pyc
 *.orig
 docs/_*
+django_netauth.egg-info/

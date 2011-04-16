@@ -1,11 +1,12 @@
 import urlparse
 
 from django.contrib import messages, auth
+from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from httplib2 import Http
 from oauth2 import Request
 
-from netauth import NETAUTH_LOG, RedirectException, settings, lang
+from netauth import NETAUTH_LOG, settings, lang
 from netauth.models import NetID
 from netauth.utils import str_to_class
 
@@ -27,19 +28,23 @@ class BaseBackend(object):
     def get_extra_data(self, response):
         raise NotImplementedError
 
+    def extract_data(self, extra, backend_field):
+        return extra.get(backend_field, '')
+
     def complete(self, request, response):
         """ Complete net auth.
         """
         extra = self.get_extra_data(response)
-        data = dict(
-            (form_field, extra.get(value, '')) for form_field, value in self.PROFILE_MAPPING.items()
-        ) if extra else dict()
+        data = {}
+        for form_field, backend_field in self.PROFILE_MAPPING.items():
+            data[form_field] = self.extract_data(extra, backend_field) 
         request.session['extra'] = data
-
-        self.fill_extra_fields(request, data)
+        
+        if settings.ACCEPT_EXTRA_FORM:
+            self.fill_extra_fields(request, data)
 
         request.session['identity'] = self.identity
-        raise RedirectException('netauth-extra', self.provider)
+        return redirect('netauth-extra', self.provider)
 
     def merge_accounts(self, request):
         """
@@ -53,14 +58,13 @@ class BaseBackend(object):
         """
         # create new net ID record in database
         # and attach it to request.user account.
-        netid = NetID()
-        netid.user = request.user
-        netid.identity = self.identity
-        netid.provider = self.provider
-        netid.save()
-
-        # show nice message to user.
-        messages.add_message(request, messages.SUCCESS, lang.ACCOUNTS_MERGED)
+        try:
+            netid = NetID.objects.get(identity=self.identity, provider=self.provider)
+        except NetID.DoesNotExist:
+            netid = NetID(user=request.user, identity=self.identity, provider=self.provider)
+            netid.save()
+            # show nice message to user.
+            messages.add_message(request, messages.SUCCESS, lang.ACCOUNTS_MERGED)
 
     def login_user(self, request):
         """
@@ -71,23 +75,13 @@ class BaseBackend(object):
         user = auth.authenticate(identity=self.identity, provider=self.provider)
         if user and settings.ACTIVATION_REQUIRED and not user.is_active:
             messages.add_message(request, messages.ERROR, lang.NOT_ACTIVATED)
-            raise RedirectException(settings.ACTIVATION_REDIRECT_URL)
-
-        # authenticate and redirect user.
+            return redirect(settings.ACTIVATION_REDIRECT_URL)
+        # login
         if user:
             auth.login(request, user)
-
-            try:
-                redirect_url = request.session['next_url']
-                del request.session['next_url']
-            except KeyError:
-                redirect_url = settings.LOGIN_REDIRECT_URL
-<<<<<<< HEAD
             return True
+            
         return False
-=======
-            raise RedirectException(redirect_url)
->>>>>>> 9f960a68e3136e3e235022792c979e4309fe785b
 
     def fill_extra_fields(self, request, data):
         """
@@ -106,16 +100,15 @@ class BaseBackend(object):
         if form.is_valid():
             form.save(request, self.identity, self.provider)
             self.login_user(request)
-
         else:
             return data
 
     def error(self, request):
         messages.error(request, getattr( lang, '%s_INVALID_RESPONSE' % self.provider.upper()))
-        raise RedirectException('netauth-login')
+        return redirect('netauth-login')
 
 
-class OAuthBaseBackend( BaseBackend ):
+class OAuthBaseBackend(BaseBackend):
 
     REQUEST_TOKEN_URL = property(lambda self: getattr(settings, "%s_REQUEST_TOKEN_URL" % self.provider.upper()))
     AUTHORIZE_URL = property(lambda self: getattr(settings, "%s_AUTHORIZE_URL" % self.provider.upper()))
@@ -135,7 +128,7 @@ class OAuthBaseBackend( BaseBackend ):
 
         if response[ 'status' ] != '200':
             NETAUTH_LOG.info(request.to_url())
-            raise RedirectException('netauth-login')
+            return None
 
         return content
 

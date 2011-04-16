@@ -36,6 +36,7 @@ ACTIVATION_REQUIRED = getattr(settings, "NETAUTH_ACTIVATION_REQUIRED", False)
 ACTIVATION_REDIRECT_URL = getattr(settings, "NETAUTH_ACTIVATION_REDIRECT_URL", "/")
 
 EXTRA_FORM = getattr(settings, "NETAUTH_EXTRA_FORM", "netauth.forms.ExtraForm")
+ACCEPT_EXTRA_FORM = getattr(settings, "NETAUTH_ACCEPT_EXTRA_FORM", True)
 
 # Django settings
 DEFAULT_FROM_EMAIL = getattr(settings, "DEFAULT_FROM_EMAIL")
@@ -60,6 +61,7 @@ FACEBOOK_APPLICATION_SECRET = getattr(settings, "FACEBOOK_APPLICATION_SECRET", N
 FACEBOOK_AUTHORIZE_URL = getattr(settings, "FACEBOOK_AUTHORIZE_URL", "https://graph.facebook.com/oauth/authorize")
 FACEBOOK_ACCESS_TOKEN_URL = getattr(settings, "FACEBOOK_ACCESS_TOKEN_URL", "https://graph.facebook.com/oauth/access_token")
 FACEBOOK_API_URL = getattr(settings, "FACEBOOK_API_URL", "https://graph.facebook.com/me")
+FACEBOOK_SCOPE = getattr(settings, "FACEBOOK_SCOPE", "")
 FACEBOOK_PROFILE_MAPPING = getattr(settings, "FACEBOOK_PROFILE_MAPPING", {
     'username': 'last_name',
 })

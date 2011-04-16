@@ -3,18 +3,8 @@ from django.http import Http404
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
-from netauth import RedirectException, settings, lang
+from netauth import settings, lang
 from netauth.utils import str_to_class, get_backend
-
-
-def redirect_decorator(func):
-    def __wrapper(request, *args, **kwargs):
-        try:
-            func(request, *args, **kwargs)
-        except RedirectException, e:
-            return redirect(*e.args, **e.kwargs)
-    return __wrapper
-
 
 def logout(request):
     auth.logout(request)
@@ -22,7 +12,6 @@ def logout(request):
     return redirect(settings.LOGOUT_URL)
 
 
-@redirect_decorator
 def begin(request, provider):
     """ Display authentication form. This is also the first step
         in registration. The actual login is in social_complete
@@ -36,7 +25,7 @@ def begin(request, provider):
     return backend.begin(request, dict(request.REQUEST.items()))
 
 
-@redirect_decorator
+#redirect_decorator
 def complete(request, provider):
     """ After first step of net authentication, we must validate the response.
         If everything is ok, we must do the following:
@@ -72,14 +61,10 @@ def complete(request, provider):
                 messages.warning(request, lang.REGISTRATION_DISABLED)
                 return redirect(settings.REGISTRATION_DISABLED_REDIRECT)
     if success:
-        try:                                                                                                                                                                                                               
-            redirect_url = request.session['next_url']                                                                                                                                                                     
-            del request.session['next_url']                                                                                                                                                                                
-        except KeyError:                                                                                                                                                                                                   
-            redirect_url = settings.LOGIN_REDIRECT_URL 
-        resp = redirect(redirect_url)
-        resp.set_cookie('logined', 'true', max_age=settings.SESSION_MAX_AGE)
-        return resp
+        redirect_url = request.session.pop('next_url', settings.LOGIN_REDIRECT_URL)
+        response = redirect(redirect_url)
+        response.set_cookie('logined', 'true', max_age=settings.SESSION_MAX_AGE)
+        return response
     return backend.complete(request, response)
 
 def extra(request, provider):
@@ -89,7 +74,7 @@ def extra(request, provider):
         identity = request.session['identity']
     except KeyError:
         raise Http404
-
+    
     if request.method == "POST":
         form = str_to_class(settings.EXTRA_FORM)(request.POST)
         if form.is_valid():
@@ -112,6 +97,7 @@ def extra(request, provider):
                 return redirect(settings.ACTIVATION_REDIRECT_URL)
     else:
         initial = request.session['extra']
+        print(initial)
         form = str_to_class(settings.EXTRA_FORM)(initial=initial)
 
     return render_to_response('netauth/extra.html', {'form': form }, context_instance=RequestContext(request))

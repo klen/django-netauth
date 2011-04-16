@@ -4,8 +4,9 @@ from netauth.models import NetID
 
 
 class NetBackend(object):
-    """ Add this Authentication Backend to
-        AUTHENTICATION_BACKENDS tuple in your settings.py
+    """
+    Add this Authentication Backend to
+    AUTHENTICATION_BACKENDS tuple in your settings.py
     """
     supports_object_permissions = False
     supports_anonymous_user = True
@@ -17,13 +18,11 @@ class NetBackend(object):
             return None
 
     def authenticate(self, identity=None, provider=None):
-        """ Authenticate user by net identity.
-        """
+        """Authenticate user by net identity."""
+        user = None
         if identity:
             try:
                 user = NetID.objects.get(identity=identity, provider=provider).user
-                return user
             except NetID.DoesNotExist:
-                return None
-        else:
-            return None
+                pass
+        return user
