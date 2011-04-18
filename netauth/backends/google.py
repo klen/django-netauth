@@ -9,7 +9,6 @@ from netauth import settings
 class GoogleBackend(OpenIDBackend):
 
     def get_extra_data(self, resp):
-        print(resp)
         return FetchResponse.fromSuccessResponse(resp)
 
     def extract_data(self, extra, backend_field):

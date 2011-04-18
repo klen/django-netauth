@@ -27,17 +27,18 @@
 
     {# vkontakte #}
     {% if ''|option:"VKONTAKTE_APPLICATION_ID" %}
+        {% set get_settings "VKONTAKTE_PROFILE_MAPPING" mapping %}
         <a class="b-providers_item b-providers_item_vkontakte" alt="Vkontakte" href="#" onclick="vk_login();"></a>
         <div id="vk_api_transport" style="position: absolute; top: -10000px;"></div>
         <script type="text/javascript">
             window.vkAsyncInit = function() { VK.init({ apiId: "{{ ''|option:'VKONTAKTE_APPLICATION_ID' }}" }); };
             function vk_login () { VK.Auth.login(function( response ){
                 if ( response.session ) { 
-                    VK.Api.call('getProfiles', {uids: response.session.user.id, fields: 'uid, first_name, last_name, sex, bdate'}, function(r) {
+                    fields_list = 'uid{% for key, value in mapping.items %}, {{ value }}{% endfor %}';
+                    VK.Api.call('getProfiles', {uids: response.session.user.id, fields: fields_list}, function(r) {
                         if (r.response) {
-                            first_name = r.response[0].first_name
-                            last_name = r.response[0].last_name
-                            document.location.href = "{% url netauth-complete 'vkontakte' %}?next={{ request.GET.next }}&first_name=" + first_name + "&last_name=" + last_name;
+                            url = '?next={{ request.GET.next }}' {% for key, value in mapping.items %} + '&{{ value }}=' + r.response[0].{{ value }}{% endfor %};
+                            document.location.href = "{% url netauth-complete 'vkontakte' %}" + url;
                         }
                         else
                             document.location.href = "{% url netauth-complete 'vkontakte' %}"
