@@ -1,6 +1,13 @@
 CHANGES
 =======
 
+## 2011-04-18 0.1.7
+-------------------
+* Many changes from ilblackdragon
+* Fix stuff with google mapping user data - in your brunch it doesn't work at all.
+* Made Facebook to retrieve email and stuff.
+* Add couple template tags
+
 ## 2011-03-19 0.1.61
 --------------------
 * Fix docs

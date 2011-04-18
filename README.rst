@@ -133,6 +133,14 @@ Contributing
 Development of django-netauth happens at github: https://github.com/klen/django-netauth
 
 
+Contributors
+=============
+
+* klen_ (Kirill Klenov)
+
+* ilblackdragon_ (Ilya) 
+
+
 License
 =======
 
@@ -141,3 +149,5 @@ Licensed under a `GNU lesser general public license`_.
 
 .. _GNU lesser general public license: http://www.gnu.org/copyleft/lesser.html
 .. _messages-framework: http://docs.djangoproject.com/en/dev/ref/contrib/messages/#ref-contrib-messages
+.. _klen: https://github.com/klen
+.. _ilblackdragon: https://github.com/ilblackdragon
