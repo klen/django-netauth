@@ -13,7 +13,8 @@ def logout(request):
 
 
 def begin(request, provider):
-    """ Display authentication form. This is also the first step
+    """ 
+        Display authentication form. This is also the first step
         in registration. The actual login is in social_complete
         function below.
     """
@@ -27,7 +28,8 @@ def begin(request, provider):
 
 #redirect_decorator
 def complete(request, provider):
-    """ After first step of net authentication, we must validate the response.
+    """ 
+        After first step of net authentication, we must validate the response.
         If everything is ok, we must do the following:
         1. If user is already authenticated:
             a. Try to login him again (strange variation but we must take it to account).
@@ -58,21 +60,18 @@ def complete(request, provider):
     else:
         success = backend.login_user(request)
         if not success and not settings.REGISTRATION_ALLOWED:
-                messages.warning(request, lang.REGISTRATION_DISABLED)
-                return redirect(settings.REGISTRATION_DISABLED_REDIRECT)
+            messages.warning(request, lang.REGISTRATION_DISABLED)
+            return redirect(settings.REGISTRATION_DISABLED_REDIRECT)
     if success:
-        redirect_url = request.session.pop('next_url', settings.LOGIN_REDIRECT_URL)
-        response = redirect(redirect_url)
-        response.set_cookie('logined', 'true', max_age=settings.SESSION_MAX_AGE)
-        return response
+        return redirect(request.session.pop('next_url', settings.LOGIN_REDIRECT_URL))
     return backend.complete(request, response)
 
 def extra(request, provider):
-    """ Handle registration of new user with extra data for profile
+    """ 
+        Handle registration of new user with extra data for profile
     """
-    try:
-        identity = request.session['identity']
-    except KeyError:
+    identity = request.session.get('identity', None)
+    if not identity
         raise Http404
     
     if request.method == "POST":
@@ -84,20 +83,12 @@ def extra(request, provider):
                 user = auth.authenticate(identity=identity, provider=provider)
                 if user:
                     auth.login(request, user)
-                    try:                                                                                                                                                                                                               
-                        next_url = request.session['next_url']
-                        del request.session['next_url']
-                    except:
-                        redirect_url = settings.LOGIN_REDIRECT_URL 
-                    response = redirect(next_url)
-                    response.set_cookie('logined', 'true', max_age=settings.SESSION_MAX_AGE)
-                    return response
+                    return redirect(request.session.pop('next_url', settings.LOGIN_REDIRECT_URL))
             else:
                 messages.warning(request, lang.ACTIVATION_REQUIRED_TEXT)
                 return redirect(settings.ACTIVATION_REDIRECT_URL)
     else:
         initial = request.session['extra']
-        print(initial)
         form = str_to_class(settings.EXTRA_FORM)(initial=initial)
 
     return render_to_response('netauth/extra.html', {'form': form }, context_instance=RequestContext(request))
