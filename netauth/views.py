@@ -71,7 +71,7 @@ def extra(request, provider):
         Handle registration of new user with extra data for profile
     """
     identity = request.session.get('identity', None)
-    if not identity
+    if not identity:
         raise Http404
     
     if request.method == "POST":
