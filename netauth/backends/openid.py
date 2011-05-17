@@ -44,7 +44,7 @@ class OpenIDBackend(BaseBackend):
 
         except discover.DiscoveryFailure:
             messages.error(request, _('Could not find OpenID server'))
-            return redirect('netnuth-login')
+            return redirect('netauth-login')
 
     def validate(self, request, data):
         """
