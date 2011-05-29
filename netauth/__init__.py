@@ -1,7 +1,7 @@
 import logging
 
 
-VERSION_INFO = (0, 1, 9)
+VERSION_INFO = (0, 1, 91)
 
 __version__ = VERSION = '.'.join(map(str, VERSION_INFO ))
 __project__ = PROJECT = 'django-netauth'
