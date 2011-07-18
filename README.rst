@@ -149,5 +149,5 @@ Licensed under a `GNU lesser general public license`_.
 
 .. _GNU lesser general public license: http://www.gnu.org/copyleft/lesser.html
 .. _messages-framework: http://docs.djangoproject.com/en/dev/ref/contrib/messages/#ref-contrib-messages
-.. _klen: https://github.com/klen
+.. _klen: https://klen.github.com
 .. _ilblackdragon: https://github.com/ilblackdragon
