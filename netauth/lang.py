@@ -27,5 +27,11 @@ INVALID_RESPONSE_FROM_OPENID = getattr(settings,
 
 VKONTAKTE_INVALID_RESPONSE = getattr(settings,
                                     "NETAUTH_VKONTAKTE_INVALID_RESPONSE",
-                                    _('Invalid response received from vkontakte server, please start the authentication process again')
+                                    _('Invalid response received from VKontakte server, please start the authentication process again')
                                     )
+
+TWITTER_INVALID_RESPONSE = getattr(settings, 
+                                    "NETAUTH_TWITTER_INVALID_RESPONSE",
+                                    _('Invalid response received from Twitter server, please start the authentication process again')
+                                    )
+
