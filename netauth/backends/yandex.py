@@ -26,7 +26,7 @@ class YandexBackend(OAuthBaseBackend):
             )
             self.identity = extra['id']
         except (KeyError, TypeError):
-            self.error(request)
+            return self.error(request)
 
         return extra
 

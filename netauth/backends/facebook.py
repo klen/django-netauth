@@ -24,7 +24,7 @@ class FacebookBackend(OAuthBaseBackend):
     def validate(self, request, data):
 
         if not data.get('code'):
-            self.error(request)
+            return self.error(request)
 
         # Get token
         request = self.get_request( url=self.ACCESS_TOKEN_URL, parameters = {
@@ -42,7 +42,7 @@ class FacebookBackend(OAuthBaseBackend):
         try:
             self.identity = extra['id']
         except KeyError:
-            self.error(request)
+            return self.error(request)
         return extra
 
     def get_extra_data(self, response):

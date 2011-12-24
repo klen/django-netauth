@@ -54,6 +54,8 @@ def complete(request, provider):
     backend = get_backend(provider)
     response = backend.validate(request, data)
 
+    if isinstance(response, HttpResponseRedirect):
+        return response
     if request.user.is_authenticated():
         success = backend.login_user(request)
         backend.merge_accounts(request)
