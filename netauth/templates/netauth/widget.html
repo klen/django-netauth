@@ -1,6 +1,6 @@
 {% load netauth_tags %}
 
-<link href="{% firstof MEDIA_URL STATIC_URL %}netauth/css/main.css" media="screen, projection" rel="stylesheet" type="text/css" />
+<link href="{% firstof STATIC_URL MEDIA_URL %}netauth/css/main.css" media="screen, projection" rel="stylesheet" type="text/css" />
 
 <div class="b-providers">
 

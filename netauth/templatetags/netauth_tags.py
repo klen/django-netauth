@@ -61,5 +61,5 @@ class SetNode(Node):
         return ''
 
 @register.simple_tag
-def get_settings(key, default=None):
-    return getattr(settings, key, default)
+def get_settings(name, default=None):
+    return getattr(django_settings, name, default) or getattr(netauth_settings, name, default)
