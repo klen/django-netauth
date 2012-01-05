@@ -15,7 +15,7 @@ remove:
 upload: _upload clean _commit doc
 
 test:
-	cd example_project && ./manage.py test main
+	cd example_project && ./manage.py test main --settings=settings.test
 
 _install:
 	sudo pip install -U .

@@ -2,8 +2,8 @@ from __future__ import absolute_import
 
 from openid.extensions.ax import FetchResponse
 
-from netauth.backends.openid import OpenIDBackend
 from netauth import settings
+from netauth.backends.openid import OpenIDBackend
 
 
 class GoogleBackend(OpenIDBackend):

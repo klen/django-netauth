@@ -6,6 +6,7 @@ from django.template import RequestContext
 from netauth import settings, lang
 from netauth.utils import str_to_class, get_backend
 
+
 def logout(request):
     auth.logout(request)
     messages.success(request, lang.SUCCESS_LOGOUT)
@@ -13,7 +14,7 @@ def logout(request):
 
 
 def begin(request, provider):
-    """ 
+    """
         Display authentication form. This is also the first step
         in registration. The actual login is in social_complete
         function below.
@@ -28,7 +29,7 @@ def begin(request, provider):
 
 #redirect_decorator
 def complete(request, provider):
-    """ 
+    """
         After first step of net authentication, we must validate the response.
         If everything is ok, we must do the following:
         1. If user is already authenticated:
@@ -69,13 +70,13 @@ def complete(request, provider):
     return backend.complete(request, response)
 
 def extra(request, provider):
-    """ 
+    """
         Handle registration of new user with extra data for profile
     """
     identity = request.session.get('identity', None)
     if not identity:
         raise Http404
-    
+
     if request.method == "POST":
         form = str_to_class(settings.EXTRA_FORM)(request.POST)
         if form.is_valid():

@@ -1,9 +1,9 @@
 from django import forms
-from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
+from django.utils.translation import ugettext as _
 
-from netauth.models import NetID
 from netauth import settings
+from netauth.models import NetID
 
 
 class ExtraForm(forms.Form):

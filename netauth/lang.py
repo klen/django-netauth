@@ -1,5 +1,5 @@
-from django.utils.translation import ugettext as _
 from django.conf import settings
+from django.utils.translation import ugettext as _
 
 
 ACTIVATION_REQUIRED_TEXT = getattr(settings, "NETAUTH_ACTIVATION_REQUIRED_TEXT", _('To complete registration, check your email and activate your account'))
@@ -32,7 +32,7 @@ VKONTAKTE_INVALID_RESPONSE = getattr(settings,
     _('Invalid response received from VKontakte server, please start the authentication process again')
 )
 
-TWITTER_INVALID_RESPONSE = getattr(settings, 
+TWITTER_INVALID_RESPONSE = getattr(settings,
     "NETAUTH_TWITTER_INVALID_RESPONSE",
     _('Invalid response received from Twitter server, please start the authentication process again')
 )

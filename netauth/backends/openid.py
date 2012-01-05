@@ -31,11 +31,11 @@ class OpenIDBackend(BaseBackend):
 
         try:
             openid_request = client.begin(openid_url)
-            sreg_extra = [value for key, value in self.PROFILE_MAPPING.items()]
+            sreg_extra = [value for __, value in self.PROFILE_MAPPING.items()]
             sreg = SRegRequest(required=sreg_extra)
             openid_request.addExtension(sreg)
             ax_msg = FetchRequest()
-            for key, detail in self.PROFILE_MAPPING.items():
+            for __, detail in self.PROFILE_MAPPING.items():
                 ax_msg.add(AttrInfo(settings.AX_URIS[detail], required=True))
             openid_request.addExtension(ax_msg)
 

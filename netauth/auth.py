@@ -11,18 +11,21 @@ class NetBackend(object):
     supports_object_permissions = False
     supports_anonymous_user = True
 
-    def get_user(self, user_id):
+    @staticmethod
+    def get_user(user_id):
         try:
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
 
-    def authenticate(self, identity=None, provider=None):
-        """Authenticate user by net identity."""
-        user = None
-        if identity:
-            try:
-                user = NetID.objects.get(identity=identity, provider=provider).user
-            except NetID.DoesNotExist:
-                pass
-        return user
+    @staticmethod
+    def authenticate(identity=None, provider=None):
+        " Authenticate user by net identity. "
+        if not identity:
+            return None
+
+        try:
+            netid = NetID.objects.get(identity=identity, provider=provider)
+            return netid.user
+        except NetID.DoesNotExist:
+            return None

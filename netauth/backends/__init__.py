@@ -1,8 +1,8 @@
 import urlparse
 
 from django.contrib import messages, auth
-from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
+from django.shortcuts import redirect
 from httplib2 import Http
 from oauth2 import Request
 
@@ -28,7 +28,8 @@ class BaseBackend(object):
     def get_extra_data(self, response):
         raise NotImplementedError
 
-    def extract_data(self, extra, backend_field):
+    @staticmethod
+    def extract_data(extra, backend_field):
         return extra.get(backend_field, '')
 
     def complete(self, request, response):
@@ -132,7 +133,8 @@ class OAuthBaseBackend(BaseBackend):
 
         return content
 
-    def get_request(self, url=None, parameters=None):
+    @staticmethod
+    def get_request(url=None, parameters=None):
         return Request(url=url, parameters=parameters)
 
     @staticmethod
