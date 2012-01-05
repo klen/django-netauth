@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+## 2012-01-05 0.1.92
+--------------------
+* Fixed integrity error (ramusus)
+
 ## 2011-05-29 0.1.91
 --------------------
 * Some fix by ramusus and belengar
