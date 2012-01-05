@@ -20,7 +20,7 @@ class VkontakteBackend(OAuthBaseBackend):
             else:
                 raise ValueError
         except ( KeyError, ValueError ):
-            self.error(request)
+            return self.error(request)
 
         return data
 

@@ -33,7 +33,7 @@ class OAuthBackend(OAuthBaseBackend):
         try:
             parameters = dict(oauth_token = data['oauth_token'], oauth_verifier = data.get('oauth_verifier', None))
         except KeyError:
-            self.error(request)
+            return self.error(request)
 
         request = self.get_request(http_url=self.ACCESS_TOKEN_URL, parameters=parameters)
         content = self.load_request(request)
@@ -51,3 +51,4 @@ class OAuthBackend(OAuthBaseBackend):
                     http_url=http_url, parameters=parameters)
         request.sign_request(self.signature_method, self.consumer, token)
         return request
+

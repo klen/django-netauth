@@ -1,5 +1,5 @@
 from django.contrib import messages, auth
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
@@ -54,6 +54,8 @@ def complete(request, provider):
     backend = get_backend(provider)
     response = backend.validate(request, data)
 
+    if isinstance(response, HttpResponseRedirect):
+        return response
     if request.user.is_authenticated():
         success = backend.login_user(request)
         backend.merge_accounts(request)
