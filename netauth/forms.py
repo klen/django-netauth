@@ -22,6 +22,6 @@ class ExtraForm(forms.Form):
         if settings.ACTIVATION_REQUIRED:
             user.is_active = False
         user.save()
-        NetID.objects.create(user=user, identity=identity, provider=provider)
+        NetID.objects.get_or_create(identity=identity, provider=provider, defaults={'user': user})
         return user
 

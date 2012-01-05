@@ -5,6 +5,7 @@
 <h2>{% trans "Registration last step" %}</h2>
 <p><label>{% trans "OpenID URL" %}:</label> {{ openid_url }}</p>
 <form method="post">
+    {% csrf_token %}
     <formfield>
         <div class="wide">{{ form.as_p }}</div>
         <p><input type="submit" value="{% trans "Submit" %}"/></p>
